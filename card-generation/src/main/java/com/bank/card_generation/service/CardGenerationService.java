@@ -3,6 +3,7 @@ package com.bank.card_generation.service;
 
 import com.bank.card_generation.client.ValidationServiceClient;
 import com.bank.card_generation.entities.Card;
+import com.bank.card_generation.entities.CardValidationRequestDTO;
 import com.bank.card_generation.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,14 @@ public class CardGenerationService {
         return "123";
     }
 
-    public boolean validateCard(String cardNumber, String expirationDate, String cvv) {
-        return validationServiceClient.validateCard(cardNumber,expirationDate,cvv);
+    public boolean generateAndValidateCard(String cardHolderName, String cardNumber, String expirationDate, String cvv) {
+        // Lógica para gerar o cartão (pode incluir geração de números, etc.)
+
+        // Criar o DTO de requisição de validação
+        CardValidationRequestDTO validationRequest = new CardValidationRequestDTO(cardNumber, cardHolderName, expirationDate, cvv);
+
+        // Chamar o serviço de validação de cartões usando Feign Client
+        return validationServiceClient.validateCard(validationRequest);
     }
 
 }
