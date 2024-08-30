@@ -1,4 +1,4 @@
-package com.bank.card_validation.config;
+package com.bank.card_validation.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

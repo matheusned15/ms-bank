@@ -1,6 +1,6 @@
 package com.bank.card_validation.controller;
 
-import com.bank.card_validation.CardValidationRequestDTO;
+import com.bank.card_validation.entity.CardValidationRequestDTO;
 import com.bank.card_validation.service.CardValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

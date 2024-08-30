@@ -1,4 +1,4 @@
-package com.bank.card_validation;
+package com.bank.card_validation.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,4 +12,6 @@ public class CardValidationRequestDTO {
     private String cardHolderName;
     private String expirationDate;
     private String cvv;
+    private double amount;
+
 }

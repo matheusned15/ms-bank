@@ -2,7 +2,9 @@ package com.bank.card_validation.service;
 
 
 
-import com.bank.card_validation.CardValidationRequestDTO;
+import com.bank.card_validation.client.CardServiceClient;
+import com.bank.card_validation.entity.CardValidationRequestDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
@@ -10,6 +12,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class CardValidationService {
+
+    @Autowired
+    private static CardServiceClient cardServiceClient;
 
     // Verifica se o número do cartão é válido usando o Algoritmo de Luhn
     public static boolean isLuhnValid(String cardNumber) {
@@ -61,6 +66,15 @@ public class CardValidationService {
                 isLuhnValid(cardValidationRequest.getCardNumber()) &&
                 isValidCardNumberFormat(cardValidationRequest.getCardNumber()) &&
                 isExpirationDateValid(cardValidationRequest.getExpirationDate()) &&
-                isCvvValid(cardValidationRequest.getCvv());
+                isCvvValid(cardValidationRequest.getCvv()) &&
+                isValidateAmount(cardValidationRequest);
+    }
+
+    public static boolean isValidateAmount(CardValidationRequestDTO requestDTO) {
+        double balance = cardServiceClient.getCardBalance(requestDTO.getCardNumber());
+        if (balance < requestDTO.getAmount()) {
+            return false; // Saldo insuficiente
+        }
+        return true;
     }
 }

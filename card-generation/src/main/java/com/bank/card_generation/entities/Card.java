@@ -26,7 +26,7 @@ public class Card {
     private String cardHolderName;
 
     @Column(name = "expiration_date", nullable = false)
-    private String expirationDate;
+    private LocalDateTime expirationDate;
 
     @Column(name = "cvv", nullable = false)
     private String cvv;
@@ -36,6 +36,18 @@ public class Card {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "balance")
+    private double balance;
+
+    public Card(Long id, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, double balance) {
+        this.id = id;
+        this.cardNumber = cardNumber;
+        this.cardHolderName = cardHolderName;
+        this.cvv = cvv;
+        this.expirationDate = expirationDate;
+        this.balance = balance;
+    }
 
     @PrePersist
     protected void onCreate() {

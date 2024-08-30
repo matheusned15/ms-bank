@@ -8,6 +8,7 @@ import com.bank.card_generation.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,14 +44,23 @@ public class CardGenerationService {
 
     // Métodos auxiliares para geração de dados fictícios
 
-    private String generateCardNumber() {
-        // Lógica de geração de número de cartão fictício
-        return "1234-5678-9101-1121";
+    public Card generateCard(String cardHolderName) {
+        String cardNumber = generateCardNumber();
+        String cvv = generateCVV();
+        LocalDateTime expirationDate = LocalDateTime.now().plusYears(4);
+        double initialBalance = 1000.00; // Define um saldo inicial (por exemplo, $1000.00)
+
+        return new Card(null,cardNumber, cardHolderName, cvv, expirationDate, initialBalance);
     }
 
-    private String generateExpirationDate() {
+    private String generateCardNumber() {
+        // Lógica para gerar o número do cartão
+        return "1234567812345678";
+    }
+
+    private LocalDateTime generateExpirationDate() {
         // Lógica de geração de data de validade fictícia
-        return "12/27";
+        return LocalDateTime.parse("12/27");
     }
 
     private String generateCVV() {
