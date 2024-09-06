@@ -80,12 +80,12 @@ public class CardValidationService {
         }
 
         // Validar saldo
-        if (!validateBalance(cardResponse.getBalance(), requestDTO.getAmount())) {
+        if (!validateBalance(cardResponse.getAmount(), requestDTO.getAmount())) {
             return false; // Saldo insuficiente
         }
 
         // Atualizar saldo após a transação ser validada
-        cardServiceClient.updateBalance(requestDTO.getCardNumber(), cardResponse.getBalance() - requestDTO.getAmount());
+        cardServiceClient.updateBalance(requestDTO.getCardNumber(), cardResponse.getAmount() - requestDTO.getAmount());
 
         return true; // Transação válida
     }

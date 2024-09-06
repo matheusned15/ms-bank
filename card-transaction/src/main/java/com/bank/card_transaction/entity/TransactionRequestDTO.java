@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class TransactionRequestDTO {
     private String cardNumber;
     private String cvv;
+
+    private String cardHolderName;
     private BigDecimal transactionAmount;
 
     public TransactionRequestDTO() {}
@@ -37,5 +39,13 @@ public class TransactionRequestDTO {
 
     public void setTransactionAmount(BigDecimal transactionAmount) {
         this.transactionAmount = transactionAmount;
+    }
+
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public void setCardHolderName(String cardHolderName) {
+        this.cardHolderName = cardHolderName;
     }
 }

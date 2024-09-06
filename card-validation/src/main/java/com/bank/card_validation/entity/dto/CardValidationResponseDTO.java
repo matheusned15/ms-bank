@@ -4,7 +4,7 @@ public class CardValidationResponseDTO {
     private String cardNumber;
     private String cvv;
     private String expirationDate;
-    private double balance;
+    private double amount;
 
 
     public String getCardNumber() {
@@ -31,11 +31,11 @@ public class CardValidationResponseDTO {
         this.expirationDate = expirationDate;
     }
 
-    public double getBalance() {
-        return balance;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }
