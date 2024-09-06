@@ -2,6 +2,8 @@ package com.bank.card_generation.controller;
 
 
 import com.bank.card_generation.entities.Card;
+import com.bank.card_generation.entities.dto.CardRequestDTO;
+import com.bank.card_generation.entities.dto.CardResponseDTO;
 import com.bank.card_generation.service.CardGenerationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,9 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @PostMapping
-    public Card createCard(@RequestBody Card card) {
-        return cardService.createCard(card);
+    @PostMapping("/create")
+    public CardResponseDTO createCard(@RequestBody CardRequestDTO request) {
+        return cardService.createCard(request);
     }
 
     @GetMapping

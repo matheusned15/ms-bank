@@ -1,4 +1,4 @@
-package com.bank.card_transaction.config;
+package com.bank.card_transaction.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

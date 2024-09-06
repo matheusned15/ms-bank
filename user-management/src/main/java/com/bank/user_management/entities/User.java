@@ -25,9 +25,13 @@ public class User implements Serializable {
     private String password_hash;
     private Date created_at;
     private Date updated_at;
+    private boolean isActive;
 
     public User(String email, String username) {
         this.email = email;
         this.username = username;
+    }
+
+    public User(Long id, String username, String email, String passwordHash, boolean active) {
     }
 }

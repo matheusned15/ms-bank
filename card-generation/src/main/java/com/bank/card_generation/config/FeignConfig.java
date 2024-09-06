@@ -19,14 +19,12 @@ public class FeignConfig {
     public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
         return new BasicAuthRequestInterceptor("user", "password"); // Exemplo de autenticação básica, caso necessário
     }
+
     @Bean
     public Request.Options options() {
         return new Request.Options(5000, 10000); // Timeout de 5 segundos para conexão e 10 segundos para resposta
     }
 
-
-
-    // Outros beans de configuração, como codificadores, decodificadores, interceptadores, etc., podem ser adicionados aqui
 }
 
 

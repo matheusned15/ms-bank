@@ -2,8 +2,12 @@ package com.bank.card_transaction.controller;
 
 
 import com.bank.card_transaction.entity.Transaction;
+import com.bank.card_transaction.entity.TransactionRequestDTO;
+import com.bank.card_transaction.entity.TransactionResponseDTO;
+import com.bank.card_transaction.exception.InsufficientFundsException;
 import com.bank.card_transaction.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +24,8 @@ public class TransactionController {
     }
 
     @PostMapping
-    public Transaction createTransaction(@RequestBody Transaction transaction) {
-        return transactionService.createTransaction(transaction);
+    public TransactionResponseDTO createTransaction(@RequestBody TransactionRequestDTO transactionRequestDTO) throws InsufficientFundsException {
+        return transactionService.processTransaction(transactionRequestDTO);
     }
 
     @GetMapping("/card/{cardId}")

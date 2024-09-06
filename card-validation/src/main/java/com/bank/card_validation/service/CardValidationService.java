@@ -1,9 +1,9 @@
 package com.bank.card_validation.service;
 
 
-
 import com.bank.card_validation.client.CardServiceClient;
-import com.bank.card_validation.entity.CardValidationRequestDTO;
+import com.bank.card_validation.entity.dto.CardValidationRequestDTO;
+import com.bank.card_validation.entity.dto.CardValidationResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,14 +67,35 @@ public class CardValidationService {
                 isValidCardNumberFormat(cardValidationRequest.getCardNumber()) &&
                 isExpirationDateValid(cardValidationRequest.getExpirationDate()) &&
                 isCvvValid(cardValidationRequest.getCvv()) &&
-                isValidateAmount(cardValidationRequest);
+                validateCardAndProcessTransaction(cardValidationRequest);
     }
 
-    public static boolean isValidateAmount(CardValidationRequestDTO requestDTO) {
-        double balance = cardServiceClient.getCardBalance(requestDTO.getCardNumber());
-        if (balance < requestDTO.getAmount()) {
+    public static boolean validateCardAndProcessTransaction(CardValidationRequestDTO requestDTO) {
+        // Obter os dados do cartão a partir do microserviço de geração de cartões
+        CardValidationResponseDTO cardResponse = cardServiceClient.getCardDetails(requestDTO.getCardNumber());
+
+        // Validar os detalhes do cartão (número, CVV, data de expiração)
+        if (!validateCardDetails(requestDTO, cardResponse)) {
+            return false; // Dados do cartão inválidos
+        }
+
+        // Validar saldo
+        if (!validateBalance(cardResponse.getBalance(), requestDTO.getAmount())) {
             return false; // Saldo insuficiente
         }
-        return true;
+
+        // Atualizar saldo após a transação ser validada
+        cardServiceClient.updateBalance(requestDTO.getCardNumber(), cardResponse.getBalance() - requestDTO.getAmount());
+
+        return true; // Transação válida
+    }
+
+    private static boolean validateCardDetails(CardValidationRequestDTO requestDTO, CardValidationResponseDTO cardResponse) {
+        return requestDTO.getCvv().equals(cardResponse.getCvv()) &&
+                requestDTO.getExpirationDate().equals(cardResponse.getExpirationDate());
+    }
+
+    private static boolean validateBalance(double currentBalance, double transactionAmount) {
+        return currentBalance >= transactionAmount; // Saldo suficiente
     }
 }

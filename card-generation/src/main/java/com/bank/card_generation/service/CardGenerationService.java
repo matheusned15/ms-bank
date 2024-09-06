@@ -3,17 +3,22 @@ package com.bank.card_generation.service;
 
 import com.bank.card_generation.client.ValidationServiceClient;
 import com.bank.card_generation.entities.Card;
-import com.bank.card_generation.entities.CardValidationRequestDTO;
+import com.bank.card_generation.entities.dto.CardRequestDTO;
+import com.bank.card_generation.entities.dto.CardResponseDTO;
+import com.bank.card_generation.entities.dto.CardValidationRequestDTO;
 import com.bank.card_generation.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CardGenerationService {
+
+    private static double LIMITE_INICIAL = 1000.00;
 
     private final ValidationServiceClient validationServiceClient;
 
@@ -25,15 +30,6 @@ public class CardGenerationService {
 
     private final CardRepository cardRepository;
 
-
-    public Card createCard(Card card) {
-        // Lógica para gerar número de cartão fictício, data de validade e CVV
-        card.setCardNumber(generateCardNumber());
-        card.setExpirationDate(generateExpirationDate());
-        card.setCvv(generateCVV());
-        return cardRepository.save(card);
-    }
-
     public List<Card> getAllCards() {
         return cardRepository.findAll();
     }
@@ -42,15 +38,22 @@ public class CardGenerationService {
         return cardRepository.findById(id);
     }
 
-    // Métodos auxiliares para geração de dados fictícios
-
-    public Card generateCard(String cardHolderName) {
+    public CardResponseDTO createCard(CardRequestDTO dto) {
         String cardNumber = generateCardNumber();
         String cvv = generateCVV();
         LocalDateTime expirationDate = LocalDateTime.now().plusYears(4);
-        double initialBalance = 1000.00; // Define um saldo inicial (por exemplo, $1000.00)
+        CardValidationRequestDTO requestDTO = new CardValidationRequestDTO(cardNumber, dto.getCardHolderName(), expirationDate, cvv);
 
-        return new Card(null,cardNumber, cardHolderName, cvv, expirationDate, initialBalance);
+        boolean isValid = validationServiceClient.validateCard(requestDTO);
+
+        if (isValid) {
+            Card card = new Card(null, cardNumber, dto.getCardHolderName(), cvv, expirationDate, LIMITE_INICIAL);
+
+            cardRepository.save(card);
+            return new CardResponseDTO(cardNumber, dto.getCardHolderName(), cvv, LocalDate.now().plusYears(3), LIMITE_INICIAL);
+        } else {
+            throw new IllegalArgumentException("Card validation failed");
+        }
     }
 
     private String generateCardNumber() {
@@ -67,15 +70,4 @@ public class CardGenerationService {
         // Lógica de geração de CVV fictício
         return "123";
     }
-
-    public boolean generateAndValidateCard(String cardHolderName, String cardNumber, String expirationDate, String cvv) {
-        // Lógica para gerar o cartão (pode incluir geração de números, etc.)
-
-        // Criar o DTO de requisição de validação
-        CardValidationRequestDTO validationRequest = new CardValidationRequestDTO(cardNumber, cardHolderName, expirationDate, cvv);
-
-        // Chamar o serviço de validação de cartões usando Feign Client
-        return validationServiceClient.validateCard(validationRequest);
-    }
-
 }

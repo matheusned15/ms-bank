@@ -1,8 +1,10 @@
 package com.bank.card_validation.controller;
 
-import com.bank.card_validation.entity.CardValidationRequestDTO;
+import com.bank.card_validation.entity.dto.CardValidationRequestDTO;
+import com.bank.card_validation.entity.dto.CardValidationResponseDTO;
 import com.bank.card_validation.service.CardValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +20,6 @@ public class CardValidationController {
 
     @PostMapping
     public boolean validateCard(@RequestBody CardValidationRequestDTO requestDTO) {
-        return cardValidationService.validateCard(requestDTO);
+        return cardValidationService.validateCardAndProcessTransaction(requestDTO);
     }
 }
