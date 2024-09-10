@@ -23,6 +23,11 @@ public class TransactionService {
     @Autowired
     private CardValidationClient cardValidationClient;
 
+    public TransactionService(TransactionRepository transactionRepository, CardValidationClient cardValidationClient) {
+        this.transactionRepository = transactionRepository;
+        this.cardValidationClient = cardValidationClient;
+    }
+
     public TransactionResponseDTO processTransaction(TransactionRequestDTO transactionRequestDTO) {
         // 1. Validar o cartão
         boolean isCardValid = cardValidationClient.validateCard(transactionRequestDTO.getCardNumber(), transactionRequestDTO.getCvv());

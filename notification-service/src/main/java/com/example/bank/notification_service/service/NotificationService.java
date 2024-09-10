@@ -1,6 +1,8 @@
 package com.example.bank.notification_service.service;
 
+import com.example.bank.notification_service.client.TransactionServiceClient;
 import com.example.bank.notification_service.entities.NotificationRequestDTO;
+import com.example.bank.notification_service.entities.TransactionDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,6 +14,9 @@ public class NotificationService {
 
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private TransactionServiceClient transactionServiceClient;
+
 
     public void sendNotification(NotificationRequestDTO notificationRequest) {
         switch (notificationRequest.getType().toLowerCase()) {
@@ -64,5 +69,21 @@ public class NotificationService {
         notification.setType("email");  // Pode ser "email" ou "sms" dependendo do evento
 
         return notification;
+    }
+
+    public void sendTransactionNotification(String transactionId) {
+        TransactionDTO transaction = transactionServiceClient.getTransactionDetails(transactionId);
+        // Lógica de envio de email
+        String message = String.format("Transaction %s with amount %.2f has been processed successfully.",
+                transaction.getTransactionId(), transaction.getAmount());
+        sendEmail("user@example.com", "Transaction Notification", message);
+    }
+
+    private void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
     }
 }
