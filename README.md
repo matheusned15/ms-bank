@@ -1,10 +1,9 @@
 <h1 align="center" style="font-weight: bold;">ms-bank 💻</h1>
 
 <p align="center">
- <a href="#tech">Tecnologia</a> • 
+ <a href="#tech">Tecnologia</a> •
+ <a href="#Modulos">Modulos</a>
  <a href="#started">Getting Started</a> • 
-  <a href="#routes">API Endpoints</a> •
- <a href="#colab">Collaborators</a> •
  <a href="#contribute">Contribute</a>
 </p>
 
@@ -15,7 +14,7 @@
 # Bank System Project
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
-## Módulos:
+<h2 id="Modulos">💻 Modulos</h2>
 -User Management: Serviço responsável por gerenciar usuários (criação, atualização, remoção e busca).
 -Card Generation: Serviço responsável por gerar cartões com base nos dados fornecidos e associá-los a usuários.
 -Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
@@ -37,18 +36,18 @@ Este projeto é uma solução completa para um sistema bancário simulado, integ
 - Spring Mail: Utilizado para enviar notificações via e-mail.
 
 
-<h2 id="started">🚀 Getting started</h2>
+<h2 id="started">🚀 Começando</h2>
 <h3>Pré-requisitos</h3>
 Para rodar o projeto, você precisará ter instalado:
 
--JDK 11+
--Maven 3.6+
+- JDK 11+
+- Maven 3.6+
 
 ## Como Rodar o Projeto
 Passo a Passo
 Clone o repositório:
 
-<h3>Cloning</h3>
+<h3>Clonando</h3>
 
 ```bash
 git clone https://github.com/seu-usuario/bank-system.git
@@ -56,7 +55,7 @@ git clone https://github.com/seu-usuario/bank-system.git
 
 Entre no diretório do projeto:
 
-<h3>Starting</h3>
+<h3>Comandos</h3>
 
 ```bash
 cd bank-system
@@ -77,13 +76,15 @@ mvn spring-boot:run
 
 Faça o mesmo para os outros módulos:
 
--Card-generation
--Card-validation
--Card-transaction
--Audit-service
--Notification-service
+Here you list all prerequisites necessary for running your project. For example:
 
-#Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições HTTP para os serviços. Cada serviço roda na porta configurada (geralmente 8080, 8081, etc.).
+- Card-generation
+- Card-validation
+- Card-transaction
+- Audit-service
+- Notification-service
+
+<h3>Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições HTTP para os serviços. Cada serviço roda na porta configurada (geralmente 8080, 8081, etc.)</h3>
 
 <h3>Config .env variables</h2>
 
@@ -101,8 +102,8 @@ Para criar um novo usuário no serviço de gerenciamento de usuários (User Mana
 ```bash
 POST http://localhost:8080/api/users
 {
-    "username": "johndoe",
-    "email": "johndoe@example.com",
+    "username": "Netero",
+    "email": "isaacnetero@example.com",
     "password": "senhaSegura123"
 }
 ```
@@ -111,8 +112,8 @@ Para gerar um novo cartão (Card Generation):
 ```bash
 POST http://localhost:8081/api/cards
 {
-    "username": "johndoe",
-    "initialBalance": 1000.0
+    "username": "Luffy",
+    "age": 25
 }
 
 ```
@@ -134,10 +135,10 @@ INSERT INTO transactions (transaction_id, sender_card, receiver_card, amount, ti
 
 <h2 id="contribute">📫 Contribute</h2>
 
-Here you will explain how other developers can contribute to your project. For example, explaining how can create their branches, which patterns to follow and how to open an pull request
+
 Caso queira contribuir para o projeto:
 -Crie sua branch
-1. `git clone https://github.com/Fernanda-Kipper/text-editor.git`
+1. `git clone https://github.com/matheusned15/text-editor.git`
 2. `git checkout -b feature/NAME`
 
 -Tutorial de como abrir um pull request
