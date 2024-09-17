@@ -1,4 +1,4 @@
-## Bank System Project
+# Bank System Project
 Descrição
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
@@ -72,3 +72,19 @@ POST http://localhost:8081/api/cards
     "username": "johndoe",
     "initialBalance": 1000.0
 }
+
+## Script para criação das tabelas
+```sql
+INSERT INTO users (username, email, password_hash) VALUES 
+('johndoe', 'johndoe@example.com', 'senhaSegura123'),
+('janedoe', 'janedoe@example.com', 'outraSenhaSegura321');
+
+INSERT INTO cards (card_number, card_holder_name, cvv, expiration_date, balance) VALUES 
+('1234567812345678', 'John Doe', '123', '2026-12-31', 1000.0),
+('8765432187654321', 'Jane Doe', '456', '2026-12-31', 2000.0);
+
+INSERT INTO transactions (transaction_id, sender_card, receiver_card, amount, timestamp) VALUES 
+('tx123', '1234567812345678', '8765432187654321', 150.0, '2024-01-01 12:00:00'),
+('tx124', '1234567812345678', '8765432187654321', 200.0, '2024-01-02 14:30:00');
+
+
