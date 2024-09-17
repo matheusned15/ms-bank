@@ -15,6 +15,7 @@
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
 <h2 id="Modulos">💻 Modulos</h2>
+
 - User Management: Serviço responsável por gerenciar usuários (criação, atualização, remoção e busca).
 - Card Generation: Serviço responsável por gerar cartões com base nos dados fornecidos e associá-los a usuários.
 - Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
