@@ -1,4 +1,4 @@
-<h1 align="center" style="font-weight: bold;">Project name 💻</h1>
+<h1 align="center" style="font-weight: bold;">ms-bank 💻</h1>
 
 <p align="center">
  <a href="#tech">Tecnologia</a> • 
@@ -16,12 +16,12 @@
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
 ## Módulos:
-User Management: Serviço responsável por gerenciar usuários (criação, atualização, remoção e busca).
-Card Generation: Serviço responsável por gerar cartões com base nos dados fornecidos e associá-los a usuários.
-Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
-Card Transaction: Serviço que realiza transações entre cartões e atualiza saldos.
-Audit Service: Serviço que audita as operações (transações e geração de cartões) realizadas no sistema.
-Notification Service: Serviço que envia notificações via email ou outro canal após operações realizadas.
+-User Management: Serviço responsável por gerenciar usuários (criação, atualização, remoção e busca).
+-Card Generation: Serviço responsável por gerar cartões com base nos dados fornecidos e associá-los a usuários.
+-Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
+-Card Transaction: Serviço que realiza transações entre cartões e atualiza saldos.
+-Audit Service: Serviço que audita as operações (transações e geração de cartões) realizadas no sistema.
+-Notification Service: Serviço que envia notificações via email ou outro canal após operações realizadas.
 
 
 <h2 id="Tecnologia">💻 Tecnologia</h2>
@@ -70,16 +70,20 @@ Suba os microserviços: Cada serviço pode ser iniciado de forma independente. V
 
 Para o user-management:
 
+```bash
 cd user-management
 mvn spring-boot:run
+```
+
 Faça o mesmo para os outros módulos:
 
-card-generation
-card-validation
-card-transaction
-audit-service
-notification-service
-Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições HTTP para os serviços. Cada serviço roda na porta configurada (geralmente 8080, 8081, etc.).
+-Card-generation
+-Card-validation
+-Card-transaction
+-Audit-service
+-Notification-service
+
+#Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições HTTP para os serviços. Cada serviço roda na porta configurada (geralmente 8080, 8081, etc.).
 
 <h3>Config .env variables</h2>
 
@@ -126,5 +130,25 @@ INSERT INTO cards (card_number, card_holder_name, cvv, expiration_date, balance)
 INSERT INTO transactions (transaction_id, sender_card, receiver_card, amount, timestamp) VALUES 
 ('tx123', '1234567812345678', '8765432187654321', 150.0, '2024-01-01 12:00:00'),
 ('tx124', '1234567812345678', '8765432187654321', 200.0, '2024-01-02 14:30:00');
+```
+
+<h2 id="contribute">📫 Contribute</h2>
+
+Here you will explain how other developers can contribute to your project. For example, explaining how can create their branches, which patterns to follow and how to open an pull request
+Caso queira contribuir para o projeto:
+-Crie sua branch
+1. `git clone https://github.com/Fernanda-Kipper/text-editor.git`
+2. `git checkout -b feature/NAME`
+
+-Tutorial de como abrir um pull request
+3. Abra um Pull Request explicando o problema resolvido ou recurso realizado, se existir, anexe screenshot das modificações visuais e aguarde a revisão!
+
+<h3>Documentação</h3>
+
+[📝 How to create a Pull Request](https://www.atlassian.com/br/git/tutorials/making-a-pull-request)
+
+
+
+
 
 
