@@ -1,3 +1,17 @@
+<h1 align="center" style="font-weight: bold;">Project name 💻</h1>
+
+<p align="center">
+ <a href="#tech">Tecnologia</a> • 
+ <a href="#started">Getting Started</a> • 
+  <a href="#routes">API Endpoints</a> •
+ <a href="#colab">Collaborators</a> •
+ <a href="#contribute">Contribute</a>
+</p>
+
+<p align="center">
+    <b>Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.</b>
+</p>
+
 # Bank System Project
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
@@ -10,33 +24,39 @@ Audit Service: Serviço que audita as operações (transações e geração de c
 Notification Service: Serviço que envia notificações via email ou outro canal após operações realizadas.
 
 
-## Tecnologias Utilizadas
-Java 11: Linguagem de programação utilizada para o desenvolvimento.
-Spring Boot: Framework principal para a criação de microserviços.
-Spring Cloud OpenFeign: Para comunicação entre os microserviços.
-Spring Data JPA: Para persistência e gerenciamento de dados.
-H2 Database: Banco de dados em memória utilizado para testes.
-Lombok: Para reduzir a verbosidade do código.
-JUnit e Mockito: Para criação de testes unitários.
-Maven: Ferramenta de gerenciamento de dependências e build.
-Spring Mail: Utilizado para enviar notificações via e-mail.
+<h2 id="Tecnologia">💻 Tecnologia</h2>
+
+- Java 11: Linguagem de programação utilizada para o desenvolvimento.
+- Spring Boot: Framework principal para a criação de microserviços.
+- Spring Cloud OpenFeign: Para comunicação entre os microserviços.
+- Spring Data JPA: Para persistência e gerenciamento de dados.
+- H2 Database: Banco de dados em memória utilizado para testes.
+- Lombok: Para reduzir a verbosidade do código.
+- JUnit e Mockito: Para criação de testes unitários.
+- Maven: Ferramenta de gerenciamento de dependências e build.
+- Spring Mail: Utilizado para enviar notificações via e-mail.
 
 
-Pré-requisitos
+<h2 id="started">🚀 Getting started</h2>
+<h3>Pré-requisitos</h3>
 Para rodar o projeto, você precisará ter instalado:
 
-JDK 11+
-Maven 3.6+
+-JDK 11+
+-Maven 3.6+
 
 ## Como Rodar o Projeto
 Passo a Passo
 Clone o repositório:
+
+<h3>Cloning</h3>
 
 ```bash
 git clone https://github.com/seu-usuario/bank-system.git
 ```
 
 Entre no diretório do projeto:
+
+<h3>Starting</h3>
 
 ```bash
 cd bank-system
@@ -61,6 +81,16 @@ audit-service
 notification-service
 Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições HTTP para os serviços. Cada serviço roda na porta configurada (geralmente 8080, 8081, etc.).
 
+<h3>Config .env variables</h2>
+
+Use the `.env.example` as reference to create your configuration file `.env` with your AWS Credentials
+
+```yaml
+NODE_AWS_REGION=us-east-1
+NODE_AWS_KEY_ID={YOUR_AWS_KEY_ID}
+NODE_AWS_SECRET={YOUR_AWS_SECRET}
+```
+
 Exemplo de requisição:
 Para criar um novo usuário no serviço de gerenciamento de usuários (User Management):
 
@@ -74,11 +104,14 @@ POST http://localhost:8080/api/users
 ```
 Para gerar um novo cartão (Card Generation):
 
+```bash
 POST http://localhost:8081/api/cards
 {
     "username": "johndoe",
     "initialBalance": 1000.0
 }
+
+```
 
 ## Script para criação das tabelas
 ```sql
