@@ -2,9 +2,9 @@
 
 <p align="center">
  <a href="#tech">Tecnologia</a> •
- <a href="#Modulos">Modulos</a>
- <a href="#started">Getting Started</a> • 
- <a href="#contribute">Contribute</a>
+ <a href="#Modulos">Modulos</a>•
+ <a href="#started">Começando</a> • 
+ <a href="#contribute">Contribuição</a>
 </p>
 
 <p align="center">
@@ -15,15 +15,15 @@
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
 <h2 id="Modulos">💻 Modulos</h2>
--User Management: Serviço responsável por gerenciar usuários (criação, atualização, remoção e busca).
--Card Generation: Serviço responsável por gerar cartões com base nos dados fornecidos e associá-los a usuários.
--Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
--Card Transaction: Serviço que realiza transações entre cartões e atualiza saldos.
--Audit Service: Serviço que audita as operações (transações e geração de cartões) realizadas no sistema.
--Notification Service: Serviço que envia notificações via email ou outro canal após operações realizadas.
+- User Management: Serviço responsável por gerenciar usuários (criação, atualização, remoção e busca).
+- Card Generation: Serviço responsável por gerar cartões com base nos dados fornecidos e associá-los a usuários.
+- Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
+- Card Transaction: Serviço que realiza transações entre cartões e atualiza saldos.
+- Audit Service: Serviço que audita as operações (transações e geração de cartões) realizadas no sistema.
+- Notification Service: Serviço que envia notificações via email ou outro canal após operações realizadas.
 
 
-<h2 id="Tecnologia">💻 Tecnologia</h2>
+<h2 id="tech">💻 Tecnologia</h2>
 
 - Java 11: Linguagem de programação utilizada para o desenvolvimento.
 - Spring Boot: Framework principal para a criação de microserviços.
@@ -133,7 +133,7 @@ INSERT INTO transactions (transaction_id, sender_card, receiver_card, amount, ti
 ('tx124', '1234567812345678', '8765432187654321', 200.0, '2024-01-02 14:30:00');
 ```
 
-<h2 id="contribute">📫 Contribute</h2>
+<h2 id="contribute">📫 Contribuição</h2>
 
 
 Caso queira contribuir para o projeto:
