@@ -1,5 +1,4 @@
 # Bank System Project
-Descrição
 Este projeto é uma solução completa para um sistema bancário simulado, integrado com várias funcionalidades que podem ser aplicadas a um jogo como Banco Imobiliário. O sistema gerencia a criação de cartões, validação de cartões, realização de transações e auditoria de todas as operações, além de enviar notificações relacionadas às ações realizadas.
 
 ## Módulos:
@@ -33,13 +32,20 @@ Maven 3.6+
 Passo a Passo
 Clone o repositório:
 
+```bash
 git clone https://github.com/seu-usuario/bank-system.git
+```
+
 Entre no diretório do projeto:
 
+```bash
 cd bank-system
+```
 Compile o projeto: Execute o comando para compilar todos os módulos:
 
+```bash
 mvn clean install
+```
 Suba os microserviços: Cada serviço pode ser iniciado de forma independente. Você pode rodá-los com o seguinte comando dentro de cada diretório:
 
 Para o user-management:
@@ -58,13 +64,14 @@ Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições
 Exemplo de requisição:
 Para criar um novo usuário no serviço de gerenciamento de usuários (User Management):
 
-
+```bash
 POST http://localhost:8080/api/users
 {
     "username": "johndoe",
     "email": "johndoe@example.com",
     "password": "senhaSegura123"
 }
+```
 Para gerar um novo cartão (Card Generation):
 
 POST http://localhost:8081/api/cards
