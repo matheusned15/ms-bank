@@ -14,15 +14,16 @@ public class AuditService {
     @Autowired
     private AuditRepository auditLogRepository;
 
-    public void logEvent(String eventType, String eventDescription) {
+    public void logEvent(AuditLog log) {
         AuditLog auditLog = new AuditLog();
-        auditLog.setEventType(eventType);
-        auditLog.setEventDescription(eventDescription);
-        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLog.setEventType(log.getEventType());
+        auditLog.setDescription(log.getDescription());
+        auditLog.setEventTime(log.getEventTime());
         auditLogRepository.save(auditLog);
     }
 
     public List<AuditLog> getAllLogs() {
         return auditLogRepository.findAll();
     }
+
 }
