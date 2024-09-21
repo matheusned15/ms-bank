@@ -1,10 +1,10 @@
-package com.bank.card_generation.entities.dto;
+package com.bank.user_management.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -13,4 +13,8 @@ public class CardRequestDTO {
     private Long id;
     private String cardHolderName;
     private Integer age;
+    private String cardNumber;
+    private String cvv;
+    private LocalDateTime expirationDate;
+    private double limit;
 }

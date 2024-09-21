@@ -1,12 +1,14 @@
 package com.bank.card_transaction.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 
-@FeignClient(name = "card-validation-service", url = "${card.validation.service.url}")
+@Component
+@FeignClient(name = "card-validation-service", url = "localhost:8003", path = "/api/cards")
 public interface CardValidationClient {
 
     @GetMapping("/api/validate")

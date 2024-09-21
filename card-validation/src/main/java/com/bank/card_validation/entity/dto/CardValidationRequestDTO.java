@@ -9,7 +9,11 @@ public class CardValidationRequestDTO {
 
     private double amount;
 
-    // Getters and Setters
+    public CardValidationRequestDTO(String cardNumber, String cardHolderName, String cvv) {
+        this.cardNumber = cardNumber;
+        this.cardHolderName = cardHolderName;
+        this.cvv = cvv;
+    }
 
     public String getCardNumber() {
         return cardNumber;

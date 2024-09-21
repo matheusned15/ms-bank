@@ -5,9 +5,11 @@ import com.bank.card_validation.entity.dto.CardValidationResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "card-generation-service", url = "http://localhost:8082")
+@Component
+@FeignClient(name = "card-generation-service", url = "http://localhost:8087", path = "/api/cards")
 public interface CardServiceClient {
 
     @GetMapping("/api/cards/{cardNumber}")
