@@ -1,7 +1,9 @@
 package com.bank.user_management.controller;
 
-import com.bank.user_management.entities.User;
-import com.bank.user_management.entities.UserDTO;
+
+import com.bank.user_management.entities.CardRequestDTO;
+import com.bank.user_management.entities.UserResponseDTO;
+import com.bank.user_management.entities.UserRequestDTO;
 import com.bank.user_management.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,14 +20,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO user = userService.getUserById(id);
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        UserResponseDTO user = userService.getUserById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -34,14 +35,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        UserDTO createdUser = userService.createUser(userDTO);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userDTO) {
+        UserResponseDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.ok(createdUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUser(id, userDTO);
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userDTO) {
+        UserResponseDTO updatedUser = userService.updateUser(id, userDTO);
         if (updatedUser == null) {
             return ResponseEntity.notFound().build();
         }

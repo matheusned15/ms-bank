@@ -1,12 +1,12 @@
-package com.bank.user_management.entities;
+package com.bank.card_generation.entities;
 
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
 
 
 @Data
@@ -50,3 +50,4 @@ public class User implements Serializable {
     }
 
 }
+

@@ -1,11 +1,13 @@
 package com.bank.user_management.service;
 
 import com.bank.user_management.entities.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Component
 public class UserFilters {
 
     public List<User> filterActiveUsers(List<User> users) {

@@ -1,8 +1,10 @@
 package com.bank.user_management.service;
 
+import com.bank.card_generation.entities.Card;
+import com.bank.card_generation.repository.CardRepository;
 import com.bank.user_management.CardValidationClient;
-import com.bank.user_management.entities.User;
-import com.bank.user_management.entities.UserDTO;
+import com.bank.user_management.entities.*;
+import com.bank.user_management.exception.CardNotFoundException;
 import com.bank.user_management.exception.UserNotFoundException;
 import com.bank.user_management.repository.UserRepository;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -18,9 +20,13 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private final UserProcessor userProcessor;
+    @Autowired
     private final UserFilters userFilters;
+    @Autowired
     private final UserConverter userConverter;
+
 
     @Autowired
     private final CardValidationClient cardValidationClient;
@@ -35,7 +41,7 @@ public class UserService {
         this.userConverter = userConverter;
     }
 
-    public List<UserDTO> getAllUsers() {
+    public List<UserResponseDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         List<User> filteredUsers = userFilters.filterActiveUsers(users);
         return filteredUsers.stream()
@@ -43,19 +49,19 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserResponseDTO getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(userConverter::convertToDTO).orElse(null);
     }
 
-    public UserDTO createUser(UserDTO userDTO) {
+    public UserResponseDTO createUser(UserRequestDTO userDTO) {
         User user = userConverter.convertToEntity(userDTO);
         user = userProcessor.process(user);
         User savedUser = userRepository.save(user);
         return userConverter.convertToDTO(savedUser);
     }
 
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
@@ -73,6 +79,18 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         userRepository.delete(user);
+    }
+
+    public Card convertToEntity(CardRequestDTO dto) {
+        return new Card(
+                dto.getId(),
+                dto.getCardNumber(),
+                dto.getCardHolderName(),
+                dto.getCvv(),
+                dto.getExpirationDate(),
+                dto.getAge(),
+                dto.getLimit()
+        );
     }
 }
 

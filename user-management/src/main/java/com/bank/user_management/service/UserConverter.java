@@ -1,16 +1,15 @@
 package com.bank.user_management.service;
 
 import com.bank.user_management.entities.User;
-import com.bank.user_management.entities.UserDTO;
+import com.bank.user_management.entities.UserResponseDTO;
+import com.bank.user_management.entities.UserRequestDTO;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
 
 
 @Component
 public class UserConverter {
 
-    public User convertToEntity(UserDTO userDTO) {
+    public User convertToEntity(UserRequestDTO userDTO) {
         return new User(
                 userDTO.getId(),
                 userDTO.getUsername(),
@@ -20,8 +19,8 @@ public class UserConverter {
         );
     }
 
-    public UserDTO convertToDTO(User user) {
-        return new UserDTO(
+    public UserResponseDTO convertToDTO(User user) {
+        return new UserResponseDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
@@ -30,7 +29,7 @@ public class UserConverter {
         );
     }
 
-    public User updateEntityFromDTO(User user, UserDTO userDTO) {
+    public User updateEntityFromDTO(User user, UserRequestDTO userDTO) {
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword_hash(userDTO.getPassword_hash());

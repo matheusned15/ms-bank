@@ -1,20 +1,23 @@
 package com.bank.card_generation.client;
 
-import com.bank.card_generation.entities.dto.UserDTO;
+import com.bank.card_generation.entities.dto.CardRequestDTO;
+import com.bank.card_generation.entities.dto.UserResponseDTO;
 import com.bank.card_generation.entities.dto.UserValidationRequestDTO;
 import com.bank.card_generation.entities.dto.ValidationResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "user-management-service", url = "${user.management.service.url}")
+@Component
+@FeignClient(name = "user-management-service", url = "$localhost:8081", path = "/api/users")
 public interface UserManagementClient {
 
     @GetMapping("/api/users/{id}")
-    UserDTO getUserById(@PathVariable("id") Long id);
+    UserResponseDTO getUserById(@PathVariable("id") Long id);
 
     @PostMapping("/api/users/validate")
     ValidationResponseDTO validateUser(@RequestBody UserValidationRequestDTO requestDTO);
+
+    @PutMapping("/api/users/{userId}/add-card")
+    void addCardToUser(@PathVariable("userId") Long userId, @RequestBody CardRequestDTO card);
 }
