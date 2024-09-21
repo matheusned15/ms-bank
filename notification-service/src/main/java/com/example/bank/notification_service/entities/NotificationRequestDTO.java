@@ -5,6 +5,12 @@ public class NotificationRequestDTO {
     private String message;
     private String type; // Email, SMS, etc.
 
+    public NotificationRequestDTO(String recipient, String message, String type) {
+        this.recipient = recipient;
+        this.message = message;
+        this.type = type;
+    }
+
     public String getRecipient() {
         return recipient;
     }

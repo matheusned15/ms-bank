@@ -1,7 +1,10 @@
 package com.bank.card_transaction.service;
 
 
+
+import com.bank.card_transaction.client.AuditClient;
 import com.bank.card_transaction.client.CardValidationClient;
+import com.bank.card_transaction.entity.AuditDTO;
 import com.bank.card_transaction.entity.Transaction;
 import com.bank.card_transaction.entity.TransactionRequestDTO;
 import com.bank.card_transaction.entity.TransactionResponseDTO;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +26,9 @@ public class TransactionService {
 
     @Autowired
     private CardValidationClient cardValidationClient;
+
+    @Autowired
+    private AuditClient auditClient;
 
     public TransactionService(TransactionRepository transactionRepository, CardValidationClient cardValidationClient) {
         this.transactionRepository = transactionRepository;
@@ -54,6 +61,13 @@ public class TransactionService {
         transaction.setStatus("SUCCESS");
 
         transactionRepository.save(transaction);
+
+        AuditDTO auditDTO = new AuditDTO(
+                "TRANSACTION",
+                "Transaction processed for card: " + transactionRequestDTO.getCardNumber(),
+                LocalDateTime.now()
+        );
+        auditClient.sendAuditEvent(auditDTO);
 
         // 5. Retornar a resposta
         return createSuccessResponse(transaction);
