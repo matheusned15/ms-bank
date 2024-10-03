@@ -8,10 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
-    private Long id;
+
     private String username;
     private String email;
-    private String password_hash;
+    private String password;
     private boolean isActive;
 
     public UserRequestDTO(String johnDoe, String mail, String password123) {

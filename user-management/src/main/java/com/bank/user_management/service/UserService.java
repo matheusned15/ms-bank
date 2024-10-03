@@ -1,13 +1,12 @@
 package com.bank.user_management.service;
 
 import com.bank.card_generation.entities.Card;
-import com.bank.card_generation.repository.CardRepository;
 import com.bank.user_management.CardValidationClient;
 import com.bank.user_management.entities.*;
-import com.bank.user_management.exception.CardNotFoundException;
 import com.bank.user_management.exception.UserNotFoundException;
 import com.bank.user_management.repository.UserRepository;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,6 +22,8 @@ public class UserService {
     @Autowired
     private final UserProcessor userProcessor;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private final UserFilters userFilters;
     @Autowired
     private final UserConverter userConverter;
@@ -33,10 +34,11 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository, CardValidationClient cardValidationClient,
-                       UserProcessor userProcessor, UserFilters userFilters, UserConverter userConverter) {
+                       UserProcessor userProcessor, PasswordEncoder passwordEncoder, UserFilters userFilters, UserConverter userConverter) {
         this.userRepository = userRepository;
         this.cardValidationClient = cardValidationClient;
         this.userProcessor = userProcessor;
+        this.passwordEncoder = passwordEncoder;
         this.userFilters = userFilters;
         this.userConverter = userConverter;
     }
@@ -63,16 +65,29 @@ public class UserService {
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(id);
+
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
+
+
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                userToUpdate.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            } else {
+                userToUpdate.setPassword(userToUpdate.getPassword());
+            }
+
+
             userToUpdate = userConverter.updateEntityFromDTO(userToUpdate, userDTO);
+
             userToUpdate = userProcessor.process(userToUpdate);
+
             User updatedUser = userRepository.save(userToUpdate);
             return userConverter.convertToDTO(updatedUser);
         } else {
             throw new UserNotFoundException("User with ID " + id + " not found.");
         }
     }
+
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
