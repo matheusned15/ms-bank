@@ -1,7 +1,6 @@
 package com.bank.user_management.controller;
 
 
-import com.bank.user_management.entities.CardRequestDTO;
 import com.bank.user_management.entities.UserResponseDTO;
 import com.bank.user_management.entities.UserRequestDTO;
 import com.bank.user_management.service.UserService;
@@ -19,6 +18,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> users = userService.getAllUsers();
@@ -34,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping
+    @PostMapping("/createUser")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userDTO) {
         UserResponseDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.ok(createdUser);
