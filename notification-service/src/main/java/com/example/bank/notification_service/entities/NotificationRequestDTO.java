@@ -11,6 +11,10 @@ public class NotificationRequestDTO {
         this.type = type;
     }
 
+    public NotificationRequestDTO() {
+
+    }
+
     public String getRecipient() {
         return recipient;
     }

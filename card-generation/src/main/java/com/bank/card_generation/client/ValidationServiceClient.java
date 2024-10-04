@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@FeignClient(name = "validation-service", url = "localhost:8001", configuration = FeignConfig.class)
+@FeignClient(name = "validation-service", url = "localhost:8003", path = "/api/card-validation")
 public interface ValidationServiceClient {
 
-    @GetMapping("/api/card-validation/validate")
-    @ResponseBody
+    @GetMapping("/validateCard")
     boolean validateCard(@RequestBody CardValidationRequestDTO requestDTO);
 }

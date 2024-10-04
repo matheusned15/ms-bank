@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 @Component
-@FeignClient(name = "user-management-service", url = "$localhost:8081", path = "/api/users")
+@FeignClient(name = "user-management-service", url = "localhost:8081", path = "/api/users")
 public interface UserManagementClient {
 
-    @GetMapping("/api/users/{id}")
+    @GetMapping("{id}")
     UserResponseDTO getUserById(@PathVariable("id") Long id);
 
     @PostMapping("/api/users/validate")

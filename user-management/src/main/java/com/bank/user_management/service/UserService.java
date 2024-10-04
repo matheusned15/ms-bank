@@ -3,6 +3,7 @@ package com.bank.user_management.service;
 import com.bank.card_generation.entities.Card;
 import com.bank.user_management.CardValidationClient;
 import com.bank.user_management.entities.*;
+import com.bank.user_management.exception.UserAlreadyExistsException;
 import com.bank.user_management.exception.UserNotFoundException;
 import com.bank.user_management.repository.UserRepository;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,12 +53,15 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserResponseDTO getUserById(Long id) {
+    public Optional<User> getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.map(userConverter::convertToDTO).orElse(null);
+        return user;
     }
 
-    public UserResponseDTO createUser(UserRequestDTO userDTO) {
+    public UserResponseDTO createUser(UserRequestDTO userDTO) throws UserAlreadyExistsException {
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new UserAlreadyExistsException("User with email " + userDTO.getEmail() + " already exists.");
+        }
         User user = userConverter.convertToEntity(userDTO);
         user = userProcessor.process(user);
         User savedUser = userRepository.save(user);
@@ -65,19 +70,20 @@ public class UserService {
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(id);
-
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
 
-
-            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-                userToUpdate.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            } else {
-                userToUpdate.setPassword(userToUpdate.getPassword());
+            if (userDTO.getUsername() != null && !userDTO.getUsername().isEmpty()) {
+                userToUpdate.setUsername(userDTO.getUsername());
             }
-
-
-            userToUpdate = userConverter.updateEntityFromDTO(userToUpdate, userDTO);
+            if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()) {
+                userToUpdate.setEmail(userDTO.getEmail());
+            }
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+                userToUpdate.setPassword(hashedPassword);
+            }
+            userToUpdate.setUpdated_at(LocalDateTime.now());
 
             userToUpdate = userProcessor.process(userToUpdate);
 

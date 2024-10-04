@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class UserConverter {
 
     public User convertToEntity(UserRequestDTO userDTO) {
+        userDTO.setActive(true);
         return new User(
                 userDTO.getUsername(),
                 userDTO.getEmail(),

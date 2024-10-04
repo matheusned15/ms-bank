@@ -54,8 +54,10 @@ public class CardGenerationService {
     }
 
     public CardResponseDTO createCard(CardRequestDTO dto) {
-        User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        UserResponseDTO userDTO = userManagementClient.getUserById(dto.getId());
+
+        User user = convertToEntity(userDTO);
 
         if (user.getCard() != null) {
             throw new IllegalStateException("User already has a card. Cannot create another.");
@@ -92,6 +94,14 @@ public class CardGenerationService {
         } else {
             throw new IllegalArgumentException("Card validation failed");
         }
+    }
+
+    public User convertToEntity(UserResponseDTO userDTO) {
+        return new User(
+                userDTO.getId(),
+                userDTO.getUsername(),
+                userDTO.getEmail()
+        );
     }
 
     public void deleteCard(Long userId) {
