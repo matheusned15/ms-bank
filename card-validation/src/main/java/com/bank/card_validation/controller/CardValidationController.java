@@ -18,7 +18,7 @@ public class CardValidationController {
         this.cardValidationService = cardValidationService;
     }
 
-    @PostMapping
+    @PostMapping("/validateCard")
     public boolean validateCard(@RequestBody CardValidationRequestDTO requestDTO) {
         return cardValidationService.validateCardAndProcessTransaction(requestDTO);
     }

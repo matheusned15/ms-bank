@@ -30,9 +30,10 @@ public class TransactionService {
     @Autowired
     private AuditClient auditClient;
 
-    public TransactionService(TransactionRepository transactionRepository, CardValidationClient cardValidationClient) {
+    public TransactionService(TransactionRepository transactionRepository, CardValidationClient cardValidationClient, AuditClient auditClient) {
         this.transactionRepository = transactionRepository;
         this.cardValidationClient = cardValidationClient;
+        this.auditClient = auditClient;
     }
 
     public TransactionResponseDTO processTransaction(TransactionRequestDTO transactionRequestDTO) {

@@ -1,3 +1,4 @@
+
 package com.example.bank.audit_service.entities;
 
 import jakarta.persistence.Entity;
@@ -18,7 +19,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AuditLog {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String eventType;
     private String description;
     private LocalDateTime eventTime;
+    private Long userId;
+    private LocalDateTime timestamp;
 }

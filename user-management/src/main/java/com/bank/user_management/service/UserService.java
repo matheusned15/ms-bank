@@ -1,8 +1,12 @@
 package com.bank.user_management.service;
 
 import com.bank.card_generation.entities.Card;
-import com.bank.user_management.CardValidationClient;
+import com.bank.user_management.client.AuditClient;
 import com.bank.user_management.entities.*;
+import com.bank.user_management.entities.dto.AuditDTO;
+import com.bank.user_management.entities.dto.CardRequestDTO;
+import com.bank.user_management.entities.dto.UserRequestDTO;
+import com.bank.user_management.entities.dto.UserResponseDTO;
 import com.bank.user_management.exception.UserAlreadyExistsException;
 import com.bank.user_management.exception.UserNotFoundException;
 import com.bank.user_management.repository.UserRepository;
@@ -30,19 +34,18 @@ public class UserService {
     @Autowired
     private final UserConverter userConverter;
 
+    @Autowired
+    private AuditClient auditClient;
 
     @Autowired
-    private final CardValidationClient cardValidationClient;
-
-    @Autowired
-    public UserService(UserRepository userRepository, CardValidationClient cardValidationClient,
-                       UserProcessor userProcessor, PasswordEncoder passwordEncoder, UserFilters userFilters, UserConverter userConverter) {
+    public UserService(UserRepository userRepository,
+                       UserProcessor userProcessor, PasswordEncoder passwordEncoder, UserFilters userFilters, UserConverter userConverter, AuditClient auditClient) {
         this.userRepository = userRepository;
-        this.cardValidationClient = cardValidationClient;
         this.userProcessor = userProcessor;
         this.passwordEncoder = passwordEncoder;
         this.userFilters = userFilters;
         this.userConverter = userConverter;
+        this.auditClient = auditClient;
     }
 
     public List<UserResponseDTO> getAllUsers() {
@@ -65,6 +68,14 @@ public class UserService {
         User user = userConverter.convertToEntity(userDTO);
         user = userProcessor.process(user);
         User savedUser = userRepository.save(user);
+
+        AuditDTO auditDTO = new AuditDTO(
+                "TRANSACTION",
+                "Transaction processed for card: " + userDTO.getUsername(),
+                LocalDateTime.now()
+        );
+        auditClient.sendAuditEvent(auditDTO);
+
         return userConverter.convertToDTO(savedUser);
     }
 

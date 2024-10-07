@@ -1,5 +1,6 @@
 package com.bank.card_generation.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Card {
     private String cardHolderName;
 
     @Column(name = "expiration_date", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/yy")
     private LocalDateTime expirationDate;
 
     @Column(name = "cvv", nullable = false)

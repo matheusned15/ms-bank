@@ -12,7 +12,9 @@ import com.bank.card_generation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -77,10 +79,11 @@ public class CardGenerationService {
         boolean isValid = validationServiceClient.validateCard(requestDTO);
 
         if (isValid) {
-            Card card = new Card(null, cardNumber, dto.getCardHolderName(), cvv, expirationDate, LIMITE_INICIAL);
-            cardRepository.save(card);
+            Card card = fillUser(requestDTO,user,userDTO,LIMITE_INICIAL);
+
 
             user.setCard(card);
+            cardRepository.save(card);
             userRepository.save(user);
 
             AuditDTO auditDTO = new AuditDTO(
@@ -96,11 +99,29 @@ public class CardGenerationService {
         }
     }
 
+    private Card fillUser(CardValidationRequestDTO requestDTO, User user, UserResponseDTO userDTO, double limiteInicial) {
+        Card card = new Card();
+        card.setId(user.getId());
+        card.setCardHolderName(requestDTO.getCardHolderName());
+        card.setCardNumber(requestDTO.getCardNumber());
+        card.setUser(user);
+        card.setBalance(limiteInicial);
+        card.setCvv(requestDTO.getCvv());
+        card.setExpirationDate(requestDTO.getExpirationDate());
+        card.setCreatedAt(LocalDateTime.now());
+        card.setUpdatedAt(LocalDateTime.now());
+        return card;
+    }
+
     public User convertToEntity(UserResponseDTO userDTO) {
         return new User(
                 userDTO.getId(),
                 userDTO.getUsername(),
-                userDTO.getEmail()
+                userDTO.getEmail(),
+                userDTO.getPassword(),
+                userDTO.getCreated_at(),
+                userDTO.getUpdated_at(),
+                userDTO.isActive()
         );
     }
 

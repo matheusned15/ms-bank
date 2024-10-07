@@ -1,8 +1,8 @@
 package com.bank.user_management.service;
 
 import com.bank.user_management.entities.User;
-import com.bank.user_management.entities.UserResponseDTO;
-import com.bank.user_management.entities.UserRequestDTO;
+import com.bank.user_management.entities.dto.UserResponseDTO;
+import com.bank.user_management.entities.dto.UserRequestDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

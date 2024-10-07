@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "audit-service", url = "http://localhost:8081")  // Substitua pela URL do audit-service
+@FeignClient(name = "audit-service", url = "http://localhost:8080", path = "/api")
 public interface AuditClient {
 
     @PostMapping("/audit")

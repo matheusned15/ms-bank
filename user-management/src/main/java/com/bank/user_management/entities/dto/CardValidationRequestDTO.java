@@ -1,4 +1,4 @@
-package com.bank.user_management.entities;
+package com.bank.user_management.entities.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

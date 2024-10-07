@@ -7,14 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/audit")
+@RequestMapping("/api")
 public class AuditController {
 
     @Autowired
     private AuditService auditService;
+
+    public AuditController(AuditService auditService) {
+        this.auditService = auditService;
+    }
 
     @PostMapping("/audit")
     public ResponseEntity<String> auditEvent(@RequestBody AuditLog auditDTO) {

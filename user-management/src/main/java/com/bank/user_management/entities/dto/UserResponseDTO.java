@@ -1,4 +1,4 @@
-package com.bank.user_management.entities;
+package com.bank.user_management.entities.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

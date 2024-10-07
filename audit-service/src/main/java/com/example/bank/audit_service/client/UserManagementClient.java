@@ -2,14 +2,15 @@ package com.example.bank.audit_service.client;
 
 import com.example.bank.audit_service.entities.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@Component
-@FeignClient(name = "user-management-service", url = "$localhost:8081", path = "/api/users")
+// Definindo um Feign Client para se comunicar com o user-management-service
+@FeignClient(name = "user-management-service")
 public interface UserManagementClient {
 
-    @GetMapping("/{userId}")
-    UserDTO getUserDetails(@PathVariable("userId") String userId);
+    // Endpoint para buscar detalhes do usuário pelo ID
+    @GetMapping("/users/{userId}")
+    UserDTO getUserById(@PathVariable("userId") Long userId);
+
 }

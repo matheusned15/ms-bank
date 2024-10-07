@@ -1,7 +1,6 @@
-package com.bank.card_generation.client;
+package com.bank.user_management.client;
 
-
-import com.bank.card_generation.entities.dto.AuditDTO;
+import com.bank.user_management.entities.dto.AuditDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

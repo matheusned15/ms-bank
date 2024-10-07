@@ -2,8 +2,8 @@ package com.bank.user_management.controller;
 
 
 import com.bank.user_management.entities.User;
-import com.bank.user_management.entities.UserResponseDTO;
-import com.bank.user_management.entities.UserRequestDTO;
+import com.bank.user_management.entities.dto.UserResponseDTO;
+import com.bank.user_management.entities.dto.UserRequestDTO;
 import com.bank.user_management.exception.UserAlreadyExistsException;
 import com.bank.user_management.exception.UserNotFoundException;
 import com.bank.user_management.service.UserService;

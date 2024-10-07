@@ -54,5 +54,15 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
     }
+
+    public User(Long id, String username, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt, boolean active) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password_hash = password;
+        this.created_at = createdAt;
+        this.updated_at = updatedAt;
+        this.isActive = active;
+    }
 }
 
