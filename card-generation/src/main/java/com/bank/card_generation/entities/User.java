@@ -1,6 +1,7 @@
 package com.bank.card_generation.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,7 @@ public class User implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "card_id", referencedColumnName = "id")
+    @JsonManagedReference
     private Card card;
 
     public User(String email, String username) {

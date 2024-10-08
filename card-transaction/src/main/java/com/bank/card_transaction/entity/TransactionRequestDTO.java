@@ -1,51 +1,70 @@
 package com.bank.card_transaction.entity;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class TransactionRequestDTO {
-    private String cardNumber;
-    private String cvv;
+    private Long payerId; // ID do pagador
+    private Long payerCardId; // ID do cartão do pagador
+    private Long recipientId; // ID do recebedor
+    private Long recipientCardId; // ID do cartão do recebedor (opcional)
+    private double amount; // Valor da transação
+    private String description; // Descrição da transação
+    private LocalDateTime transactionDate; // Data da transação
 
-    private String cardHolderName;
-    private BigDecimal transactionAmount;
-
-    public TransactionRequestDTO() {}
-
-    public TransactionRequestDTO(String cardNumber, String cvv, BigDecimal transactionAmount) {
-        this.cardNumber = cardNumber;
-        this.cvv = cvv;
-        this.transactionAmount = transactionAmount;
+    // Getters e Setters
+    public Long getPayerId() {
+        return payerId;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public void setPayerId(Long payerId) {
+        this.payerId = payerId;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public Long getPayerCardId() {
+        return payerCardId;
     }
 
-    public String getCvv() {
-        return cvv;
+    public void setPayerCardId(Long payerCardId) {
+        this.payerCardId = payerCardId;
     }
 
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
+    public Long getRecipientId() {
+        return recipientId;
     }
 
-    public BigDecimal getTransactionAmount() {
-        return transactionAmount;
+    public void setRecipientId(Long recipientId) {
+        this.recipientId = recipientId;
     }
 
-    public void setTransactionAmount(BigDecimal transactionAmount) {
-        this.transactionAmount = transactionAmount;
+    public Long getRecipientCardId() {
+        return recipientCardId;
     }
 
-    public String getCardHolderName() {
-        return cardHolderName;
+    public void setRecipientCardId(Long recipientCardId) {
+        this.recipientCardId = recipientCardId;
     }
 
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(LocalDateTime transactionDate) {
+        this.transactionDate = transactionDate;
     }
 }

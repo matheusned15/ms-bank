@@ -3,49 +3,41 @@ package com.bank.card_transaction.entity;
 import java.math.BigDecimal;
 
 public class TransactionResponseDTO {
-    private String transactionId;
-    private String cardNumber;
-    private BigDecimal transactionAmount;
-    private String status;
+    private String status; // Sucesso ou falha
+    private String message; // Mensagem descritiva
+    private double payerNewBalance; // Novo saldo do pagador
+    private double recipientNewBalance; // Novo saldo do recebedor (caso aplicável)
 
-    public TransactionResponseDTO() {}
-
-    public TransactionResponseDTO(String transactionId, String cardNumber, BigDecimal transactionAmount, String status) {
-        this.transactionId = transactionId;
-        this.cardNumber = cardNumber;
-        this.transactionAmount = transactionAmount;
-        this.status = status;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public BigDecimal getTransactionAmount() {
-        return transactionAmount;
-    }
-
-    public void setTransactionAmount(BigDecimal transactionAmount) {
-        this.transactionAmount = transactionAmount;
-    }
-
+    // Getters e Setters
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public double getPayerNewBalance() {
+        return payerNewBalance;
+    }
+
+    public void setPayerNewBalance(double payerNewBalance) {
+        this.payerNewBalance = payerNewBalance;
+    }
+
+    public double getRecipientNewBalance() {
+        return recipientNewBalance;
+    }
+
+    public void setRecipientNewBalance(double recipientNewBalance) {
+        this.recipientNewBalance = recipientNewBalance;
     }
 }
