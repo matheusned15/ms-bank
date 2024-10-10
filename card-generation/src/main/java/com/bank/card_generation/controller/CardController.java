@@ -28,6 +28,12 @@ public class CardController {
         return cardService.createCard(request);
     }
 
+    @PutMapping("/{cardId}/balance")
+    public ResponseEntity<Void> updateCardBalance(@PathVariable Long cardId, @RequestParam double newBalance) {
+        cardService.updateCardBalance(cardId, newBalance);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping
     public List<Card> getAllCards() {
         return cardService.getAllCards();

@@ -1,15 +1,15 @@
-package com.bank.card_transaction.entity;
+package com.bank.card_transaction.entity.dto;
 
 import java.time.LocalDateTime;
 
 public class TransactionRequestDTO {
-    private Long payerId; // ID do pagador
-    private Long payerCardId; // ID do cartão do pagador
-    private Long recipientId; // ID do recebedor
-    private Long recipientCardId; // ID do cartão do recebedor (opcional)
-    private double amount; // Valor da transação
-    private String description; // Descrição da transação
-    private LocalDateTime transactionDate; // Data da transação
+    private Long payerId;
+    private Long payerCardId;
+    private Long recipientId;
+    private Long recipientCardId;
+    private double amount;
+    private String description;
+    private LocalDateTime transactionDate;
 
     // Getters e Setters
     public Long getPayerId() {

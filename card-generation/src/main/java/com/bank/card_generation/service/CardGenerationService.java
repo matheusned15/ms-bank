@@ -184,4 +184,12 @@ public class CardGenerationService {
         return String.valueOf(cvv);
     }
 
+    public void updateCardBalance(Long cardId, double newBalance) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new IllegalArgumentException("Cartão não encontrado."));
+
+
+        card.setBalance(newBalance);
+        cardRepository.save(card);
+    }
 }

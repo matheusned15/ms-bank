@@ -1,12 +1,12 @@
-package com.bank.card_transaction.entity;
+package com.bank.card_transaction.entity.dto;
 
 import java.math.BigDecimal;
 
 public class TransactionResponseDTO {
-    private String status; // Sucesso ou falha
-    private String message; // Mensagem descritiva
-    private double payerNewBalance; // Novo saldo do pagador
-    private double recipientNewBalance; // Novo saldo do recebedor (caso aplicável)
+    private String status;
+    private String message;
+    private double payerNewBalance;
+    private double recipientNewBalance;
 
     // Getters e Setters
     public String getStatus() {

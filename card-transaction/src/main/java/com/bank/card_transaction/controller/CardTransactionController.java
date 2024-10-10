@@ -2,10 +2,8 @@ package com.bank.card_transaction.controller;
 
 
 
-
-import com.bank.card_transaction.entity.Transaction;
-import com.bank.card_transaction.entity.TransactionRequestDTO;
-import com.bank.card_transaction.entity.TransactionResponseDTO;
+import com.bank.card_transaction.entity.dto.TransactionRequestDTO;
+import com.bank.card_transaction.entity.dto.TransactionResponseDTO;
 import com.bank.card_transaction.service.CardTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +23,29 @@ public class CardTransactionController {
         this.cardTransactionService = cardTransactionService;
     }
 
-    // Endpoint para realizar uma transação entre dois cartões
+
     @PostMapping("/transfer")
-    public ResponseEntity<TransactionResponseDTO> transferBetweenCards(@RequestParam TransactionRequestDTO dto) {
+    public ResponseEntity<TransactionResponseDTO> transferBetweenCards(@RequestBody TransactionRequestDTO dto) {
         TransactionResponseDTO transaction = cardTransactionService.processTransaction(dto);
         return ResponseEntity.ok(transaction);
     }
 
-    // Endpoint para listar transações de um cartão específico
-    @GetMapping("/card/{cardId}")
-    public ResponseEntity<List<Transaction>> getTransactionsByCardId(@PathVariable Long cardId) {
-        List<Transaction> transactions = cardTransactionService.getTransactionsByCardId(cardId);
+
+    @GetMapping("/user/{cardId}")
+    public ResponseEntity<List<TransactionResponseDTO>> getTransactionsByUserId(@PathVariable Long cardId) {
+        List<TransactionResponseDTO> transactions = cardTransactionService.getTransactionsByUserId(cardId);
+        if (transactions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactionsByUserId(@PathVariable Long userId) {
+        List<TransactionResponseDTO> transactions = cardTransactionService.getAllTransactionsByUserId(userId);
+        if (transactions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(transactions);
     }
 }

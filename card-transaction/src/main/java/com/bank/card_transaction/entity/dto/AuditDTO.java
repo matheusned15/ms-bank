@@ -1,4 +1,4 @@
-package com.bank.card_transaction.entity;
+package com.bank.card_transaction.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

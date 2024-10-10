@@ -3,19 +3,24 @@ package com.bank.card_transaction.service;
 
 
 
+import com.bank.card_transaction.client.CardGenerationClient;
 import com.bank.card_transaction.client.CardValidationClient;
 import com.bank.card_transaction.entity.Card;
+import com.bank.card_transaction.entity.TransactionType;
+import com.bank.card_transaction.entity.dto.CardDTO;
 import com.bank.card_transaction.entity.Transaction;
-import com.bank.card_transaction.entity.TransactionRequestDTO;
-import com.bank.card_transaction.entity.TransactionResponseDTO;
+import com.bank.card_transaction.entity.dto.TransactionRequestDTO;
+import com.bank.card_transaction.entity.dto.TransactionResponseDTO;
 import com.bank.card_transaction.repository.CardRepository;
 import com.bank.card_transaction.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CardTransactionService {
@@ -27,59 +32,96 @@ public class CardTransactionService {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    private CardValidationClient cardValidationClient; // Cliente para validação de cartões
+    private CardGenerationClient cardGenerationClient;
 
-    public CardTransactionService(CardRepository cardRepository, TransactionRepository transactionRepository, CardValidationClient cardValidationClient) {
+    public CardTransactionService(CardRepository cardRepository, TransactionRepository transactionRepository, CardGenerationClient cardGenerationClient) {
         this.cardRepository = cardRepository;
         this.transactionRepository = transactionRepository;
-        this.cardValidationClient = cardValidationClient;
+        this.cardGenerationClient = cardGenerationClient;
     }
 
     @Transactional
     public TransactionResponseDTO processTransaction(TransactionRequestDTO request) {
-        // Validar o cartão do pagador e do recebedor usando o client de validação
-        if (!cardValidationClient.validateCard(request.getPayerCardId()) ||
-                !cardValidationClient.validateCard(request.getRecipientCardId())) {
-            return createFailedTransactionResponse("Um ou mais cartões são inválidos");
+        CardDTO payerCardDTO = cardGenerationClient.getCardById(request.getPayerCardId());
+        CardDTO recipientCardDTO = cardGenerationClient.getCardById(request.getRecipientCardId());
+
+
+        if (payerCardDTO == null) {
+            throw new IllegalArgumentException("Cartão do pagador não encontrado com o ID fornecido.");
+        }
+        if (recipientCardDTO == null) {
+            throw new IllegalArgumentException("Cartão do recebedor não encontrado com o ID fornecido.");
         }
 
-        // Buscar o cartão do pagador
-        Card payerCard = cardRepository.findById(request.getPayerCardId())
-                .orElseThrow(() -> new RuntimeException("Cartão do pagador não encontrado"));
 
-        // Buscar o cartão do recebedor
-        Card recipientCard = cardRepository.findById(request.getRecipientCardId())
-                .orElseThrow(() -> new RuntimeException("Cartão do recebedor não encontrado"));
-
-        // Verificar saldo do pagador
-        if (payerCard.getBalance() < request.getAmount()) {
-            return createFailedTransactionResponse("Saldo insuficiente no cartão do pagador");
+        if (payerCardDTO.getBalance() < request.getAmount()) {
+            return createFailedTransactionResponse("Saldo insuficiente no cartão do pagador.");
         }
 
-        // Atualizar saldo do pagador e do recebedor
-        double payerNewBalance = payerCard.getBalance() - request.getAmount();
-        double recipientNewBalance = recipientCard.getBalance() + request.getAmount();
 
-        payerCard.setBalance(payerNewBalance);
-        recipientCard.setBalance(recipientNewBalance);
+        double payerNewBalance = payerCardDTO.getBalance() - request.getAmount();
+        double recipientNewBalance = recipientCardDTO.getBalance() + request.getAmount();
 
-        // Salvar as alterações nos cartões
-        cardRepository.save(payerCard);
-        cardRepository.save(recipientCard);
 
-        // Registrar a transação
+        cardGenerationClient.updateCardBalance(payerCardDTO.getId(), payerNewBalance);
+        cardGenerationClient.updateCardBalance(recipientCardDTO.getId(), recipientNewBalance);
+
+
+        Card payerCard = saveOrUpdateCard(payerCardDTO);
+        Card recipientCard = saveOrUpdateCard(recipientCardDTO);
+
+
+        return registerTransaction(payerCard, recipientCard, request, payerNewBalance, recipientNewBalance);
+    }
+
+    private Card saveOrUpdateCard(CardDTO cardDTO) {
+        Optional<Card> existingCard = cardRepository.findById(cardDTO.getId());
+        if (existingCard.isPresent()) {
+            return existingCard.get();
+        }
+
+
+        Card newCard = convertDtoToEntity(cardDTO);
+        return cardRepository.save(newCard);
+    }
+
+    private TransactionResponseDTO registerTransaction(Card payerCard, Card recipientCard, TransactionRequestDTO request, double payerNewBalance, double recipientNewBalance) {
+
         Transaction transaction = new Transaction();
         transaction.setPayerCard(payerCard);
         transaction.setRecipientCard(recipientCard);
         transaction.setTransactionAmount(request.getAmount());
         transaction.setDescription(request.getDescription());
+        transaction.setTransactionDate(request.getTransactionDate());
+        transaction.setMerchantName(request.getDescription());
+        transaction.setTransactionType(TransactionType.DEBIT);
+        transaction.setUserId(payerCard.getId());
+
+
+        transaction.setPayerNewBalance(BigDecimal.valueOf(payerNewBalance));
+        transaction.setRecipientNewBalance(BigDecimal.valueOf(recipientNewBalance));
+        transaction.setStatus("SUCCESS");
+
+
         transactionRepository.save(transaction);
 
-        // Retornar resposta de sucesso
+
         return createSuccessTransactionResponse(payerNewBalance, recipientNewBalance);
     }
 
-    // Método para criar uma resposta de sucesso
+
+    private Card convertDtoToEntity(CardDTO cardDTO) {
+        Card card = new Card();
+        card.setId(cardDTO.getId());
+        card.setCardNumber(cardDTO.getCardNumber());
+        card.setCardHolderName(cardDTO.getCardHolderName());
+        card.setExpirationDate(cardDTO.getExpirationDate());
+        card.setCvv(cardDTO.getCvv());
+        card.setBalance(cardDTO.getBalance());
+        return card;
+    }
+
+
     private TransactionResponseDTO createSuccessTransactionResponse(double payerNewBalance, double recipientNewBalance) {
         TransactionResponseDTO response = new TransactionResponseDTO();
         response.setStatus("SUCCESS");
@@ -89,7 +131,7 @@ public class CardTransactionService {
         return response;
     }
 
-    // Método para criar uma resposta de falha
+
     private TransactionResponseDTO createFailedTransactionResponse(String message) {
         TransactionResponseDTO response = new TransactionResponseDTO();
         response.setStatus("FAILED");
@@ -97,9 +139,32 @@ public class CardTransactionService {
         return response;
     }
 
+    public List<TransactionResponseDTO> getTransactionsByUserId(Long cardId) {
+        List<Transaction> transactions = transactionRepository.findByPayerCard_IdOrRecipientCard_Id(cardId, cardId);
 
-    public List<Transaction> getTransactionsByCardId(Long cardId) {
-        List<Transaction> transactionList = transactionRepository.findAllById(Collections.singleton(cardId));
-        return transactionList;
+
+        return transactions.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    private TransactionResponseDTO convertToResponseDTO(Transaction transaction) {
+        TransactionResponseDTO dto = new TransactionResponseDTO();
+        dto.setStatus(transaction.getStatus());
+        dto.setMessage("Transação encontrada");
+        dto.setPayerNewBalance(transaction.getPayerNewBalance().doubleValue());
+        dto.setRecipientNewBalance(transaction.getRecipientNewBalance().doubleValue());
+        return dto;
+    }
+
+    public List<TransactionResponseDTO> getAllTransactionsByUserId(Long userId) {
+        List<Transaction> transactions = transactionRepository.findByPayerCard_UserIdOrRecipientCard_UserId(userId, userId);
+
+
+        return transactions.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 }
+

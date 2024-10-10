@@ -1,91 +1,72 @@
 package com.bank.card_transaction.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "cards")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "card_number", nullable = false, unique = true)
     private String cardNumber;
+
+    @Column(name = "card_holder_name", nullable = false)
     private String cardHolderName;
-    private String expirationDate; // No formato MM/YY
+
+    @Column(name = "expiration_date", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/yy")
+    private String expirationDate;
+
+    @Column(name = "cvv", nullable = false)
     private String cvv;
-    private double balance; // Saldo do cartão
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Getters e Setters
+    @Column(name = "balance")
+    private double balance;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToOne(mappedBy = "card")
+    @JsonBackReference
+    private User user;
 
-    public void setId(Long id) {
+    public Card(Long id, String cardNumber, String cardHolderName, String cvv, String expirationDate, Integer age, double balance) {
         this.id = id;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
-    }
-
-    public String getCardHolderName() {
-        return cardHolderName;
-    }
-
-    public void setCardHolderName(String cardHolderName) {
         this.cardHolderName = cardHolderName;
-    }
-
-    public String getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(String expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public String getCvv() {
-        return cvv;
-    }
-
-    public void setCvv(String cvv) {
         this.cvv = cvv;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
+        this.expirationDate = expirationDate;
         this.balance = balance;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Card(Object o, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, double limiteInicial) {
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }
