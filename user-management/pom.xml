@@ -49,6 +49,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.23</version> <!-- Verifique a versão mais recente no repositório Maven -->
+		</dependency>
+
+
 		<!-- Feign Client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
