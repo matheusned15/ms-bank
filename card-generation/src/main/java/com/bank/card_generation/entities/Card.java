@@ -43,8 +43,9 @@ public class Card {
     @Column(name = "balance")
     private double balance;
 
-    @OneToOne(mappedBy = "card")
+    @ManyToOne
     @JsonBackReference
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Card(Long id, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, Integer age, double balance) {

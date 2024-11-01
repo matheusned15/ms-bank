@@ -1,12 +1,9 @@
 package com.bank.user_management.service;
 
-import com.bank.card_generation.entities.Card;
+
 import com.bank.user_management.client.AuditClient;
 import com.bank.user_management.entities.*;
-import com.bank.user_management.entities.dto.AuditDTO;
-import com.bank.user_management.entities.dto.CardRequestDTO;
-import com.bank.user_management.entities.dto.UserRequestDTO;
-import com.bank.user_management.entities.dto.UserResponseDTO;
+import com.bank.user_management.entities.dto.*;
 import com.bank.user_management.exception.UserAlreadyExistsException;
 import com.bank.user_management.exception.UserNotFoundException;
 import com.bank.user_management.repository.UserRepository;
@@ -81,9 +78,11 @@ public class UserService {
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(id);
+
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
 
+            // Atualização dos dados do usuário se forem fornecidos
             if (userDTO.getUsername() != null && !userDTO.getUsername().isEmpty()) {
                 userToUpdate.setUsername(userDTO.getUsername());
             }
@@ -94,16 +93,48 @@ public class UserService {
                 String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
                 userToUpdate.setPassword(hashedPassword);
             }
+
+            // Verifica se há um cartão no UserRequestDTO
+            CardDTO cardDTO = userDTO.getCard();
+            if (cardDTO != null) {
+                if (userToUpdate.getCard() == null) {
+                    Card newCard = convertCardDTOToEntity(cardDTO);
+                    userToUpdate.setCard(newCard);
+                } else {
+                    throw new IllegalStateException("Usuário já possui um cartão. Não é possível adicionar outro.");
+                }
+            }
+
+            // Atualizar a data de modificação
             userToUpdate.setUpdated_at(LocalDateTime.now());
 
+            // Processar o usuário (caso haja algum processamento adicional necessário)
             userToUpdate = userProcessor.process(userToUpdate);
 
+            // Salvar as atualizações no banco de dados
             User updatedUser = userRepository.save(userToUpdate);
+
+            // Converter e retornar o User atualizado como DTO
             return userConverter.convertToDTO(updatedUser);
         } else {
-            throw new UserNotFoundException("User with ID " + id + " not found.");
+            throw new UserNotFoundException("Usuário com ID " + id + " não encontrado.");
         }
     }
+
+    private Card convertCardDTOToEntity(CardDTO cardDTO) {
+        Card card = new Card();
+        card.setCardNumber(cardDTO.getCardNumber());
+        card.setCvv(cardDTO.getCvv());
+        card.setExpirationDate(cardDTO.getExpirationDate());
+        card.setBalance(cardDTO.getBalance());
+        card.setCreatedAt(LocalDateTime.now());
+        card.setUpdatedAt(LocalDateTime.now());
+        card.setCardHolderName(cardDTO.getCardHolderName());
+        card.setId(cardDTO.getId());
+        return card;
+    }
+
+
 
 
     public void deleteUser(Long id) {

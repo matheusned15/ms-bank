@@ -24,7 +24,7 @@ public class User implements Serializable {
     private Long id;
     private String username;
     private String email;
-    private String password_hash;
+    private String password;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     private boolean isActive;
@@ -42,11 +42,11 @@ public class User implements Serializable {
     public User(Long id, String username, String email, String passwordHash, boolean active) {
     }
 
-    public User(Long id, String username, String email, String password_hash, LocalDateTime created_at, LocalDateTime updated_at) {
+    public User(Long id, String username, String email, String password, LocalDateTime created_at, LocalDateTime updated_at) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password_hash = password_hash;
+        this.password = password;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -61,7 +61,7 @@ public class User implements Serializable {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password_hash = password;
+        this.password = password;
         this.created_at = createdAt;
         this.updated_at = updatedAt;
         this.isActive = active;

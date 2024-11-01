@@ -1,9 +1,6 @@
 package com.bank.card_generation.client;
 
-import com.bank.card_generation.entities.dto.CardRequestDTO;
-import com.bank.card_generation.entities.dto.UserResponseDTO;
-import com.bank.card_generation.entities.dto.UserValidationRequestDTO;
-import com.bank.card_generation.entities.dto.ValidationResponseDTO;
+import com.bank.card_generation.entities.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -20,4 +17,7 @@ public interface UserManagementClient {
 
     @PutMapping("/api/users/{userId}/add-card")
     void addCardToUser(@PathVariable("userId") Long userId, @RequestBody CardRequestDTO card);
+
+    @PutMapping("/{id}")
+    void updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO);
 }

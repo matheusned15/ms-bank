@@ -9,12 +9,11 @@ import com.bank.card_generation.entities.User;
 import com.bank.card_generation.entities.dto.*;
 import com.bank.card_generation.repository.CardRepository;
 import com.bank.card_generation.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -57,47 +56,102 @@ public class CardGenerationService {
 
     public CardResponseDTO createCard(CardRequestDTO dto) {
 
+        // Buscar o usuário pelo serviço UserManagement
         UserResponseDTO userDTO = userManagementClient.getUserById(dto.getId());
 
+        // Converter o UserResponseDTO para a entidade User
         User user = convertToEntity(userDTO);
 
+        // Verificar se o usuário já possui um cartão no sistema UserManagement
         if (user.getCard() != null) {
-            throw new IllegalStateException("User already has a card. Cannot create another.");
+            throw new IllegalStateException("Usuário já possui um cartão. Não é possível criar outro.");
         }
 
+        // Gerar número do cartão, CVV e data de expiração
         String cardNumber = generateCardNumber();
         String cvv = generateCVV();
         LocalDateTime expirationDate = LocalDateTime.now().plusYears(4);
 
+        // Definir o limite inicial do cartão baseado na idade
         if (dto.getAge() <= 22) {
             LIMITE_INICIAL = 2000;
         } else {
             LIMITE_INICIAL = 5000;
         }
 
+        // Criar um CardValidationRequestDTO para validar o cartão
         CardValidationRequestDTO requestDTO = new CardValidationRequestDTO(cardNumber, dto.getCardHolderName(), expirationDate, cvv);
+
+        // Validar o cartão usando o serviço de validação
         boolean isValid = validationServiceClient.validateCard(requestDTO);
 
         if (isValid) {
-            Card card = fillUser(requestDTO,user,userDTO,LIMITE_INICIAL);
+            // Preencher os dados do cartão e associar ao usuário
+            Card card = new Card();
+            card.setCardHolderName(dto.getCardHolderName());
+            card.setCardNumber(cardNumber);
+            card.setCvv(cvv);
+            card.setExpirationDate(expirationDate);
+            card.setBalance(LIMITE_INICIAL);
 
+            // Associar o usuário ao cartão, garantindo que o usuário tenha um ID
+            if (user.getId() == null) {
+                throw new IllegalStateException("O usuário deve possuir um ID antes de associar um cartão.");
+            }
+            card.setUser(user);
 
-            user.setCard(card);
-            cardRepository.save(card);
-            userRepository.save(user);
+            // Salvar o cartão no repositório de cartões
+            Card savedCard = cardRepository.save(card);
 
+            // **Atualizar o usuário no UserManagement com o ID do cartão**
+            user.setCard(savedCard);
+
+            UserRequestDTO userRequestDTO = convertToRequestDTO(user);
+            userRequestDTO.getCard().setId(savedCard.getId()); // define o ID do cartão no DTO de atualização
+
+            userManagementClient.updateUser(user.getId(), userRequestDTO);
+
+            // Enviar um evento de auditoria para registrar a criação do cartão
             AuditDTO auditDTO = new AuditDTO(
                     "CARD_CREATION",
-                    "Card created for user: " + dto.getCardHolderName(),
+                    "Cartão criado para o usuário: " + dto.getCardHolderName(),
                     LocalDateTime.now()
             );
             auditClient.sendAuditEvent(auditDTO);
 
+            // Retornar a resposta contendo os detalhes do cartão criado
             return new CardResponseDTO(cardNumber, dto.getCardHolderName(), cvv, expirationDate.toLocalDate(), LIMITE_INICIAL);
         } else {
-            throw new IllegalArgumentException("Card validation failed");
+            throw new IllegalArgumentException("A validação do cartão falhou.");
         }
     }
+
+
+
+    public UserRequestDTO convertToRequestDTO(User user) {
+        CardDTO cardDTO = user.getCard() != null ? new CardDTO(
+                user.getCard().getCardNumber(),
+                user.getCard().getCardHolderName(),
+                user.getCard().getExpirationDate(),
+                user.getCard().getCvv(),
+                user.getCard().getBalance()
+        ) : null;
+
+        return new UserRequestDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getCreated_at(),
+                user.getUpdated_at(),
+                user.isActive(),
+                cardDTO
+        );
+    }
+
+
+
+
 
     private Card fillUser(CardValidationRequestDTO requestDTO, User user, UserResponseDTO userDTO, double limiteInicial) {
         Card card = new Card();
@@ -125,18 +179,26 @@ public class CardGenerationService {
         );
     }
 
+    @Transactional
     public void deleteCard(Long userId) {
+        // Buscar o usuário pelo ID
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
-        if (user.getCard() == null) {
-            throw new IllegalStateException("User does not have a card.");
+        // Verificar se o usuário possui um cartão
+        Card card = user.getCard();  // Captura o cartão antes de remover a referência
+        if (card != null) {
+            // Desassociar o cartão do usuário
+            user.setCard(null);
+            userRepository.save(user); // Atualizar o usuário para remover o vínculo
+
+            // Remover o cartão da base usando o objeto 'card' capturado
+            cardRepository.delete(card);
+        } else {
+            throw new IllegalStateException("Usuário não possui um cartão para remover.");
         }
-
-        cardRepository.delete(user.getCard());
-        user.setCard(null);
-        userRepository.save(user);
     }
+
 
     private String generateCardNumber() {
         StringBuilder cardNumber = new StringBuilder();

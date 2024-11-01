@@ -2,6 +2,7 @@ package com.bank.user_management.controller;
 
 
 import com.bank.user_management.entities.User;
+import com.bank.user_management.entities.dto.CardDTO;
 import com.bank.user_management.entities.dto.UserResponseDTO;
 import com.bank.user_management.entities.dto.UserRequestDTO;
 import com.bank.user_management.exception.UserAlreadyExistsException;
@@ -59,8 +60,11 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) {
