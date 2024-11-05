@@ -1,6 +1,5 @@
 package com.bank.card_generation.entities.dto;
 
-import com.bank.card_generation.entities.Card;
 
 import java.time.LocalDateTime;
 
@@ -12,12 +11,11 @@ public class UserRequestDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
-    private CardDTO card; // Aqui incluímos o CardDTO para associar o cartão ao usuário
+    private CardDTO card;
 
-    // Construtor padrão
     public UserRequestDTO() {}
 
-    // Construtor completo
+
     public UserRequestDTO(Long id, String username, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt, boolean active, CardDTO card) {
         this.id = id;
         this.username = username;
@@ -29,7 +27,7 @@ public class UserRequestDTO {
         this.card = card;
     }
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }

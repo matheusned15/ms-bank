@@ -1,14 +1,22 @@
 package com.bank.card_transaction.entity.dto;
 
-import java.math.BigDecimal;
 
 public class TransactionResponseDTO {
+
+    private Long transactionId;
     private String status;
     private String message;
     private double payerNewBalance;
     private double recipientNewBalance;
 
-    // Getters e Setters
+    public Long getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(Long transactionId) {
+        this.transactionId = transactionId;
+    }
+
     public String getStatus() {
         return status;
     }

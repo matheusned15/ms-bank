@@ -34,14 +34,5 @@ public class UserConverter {
         );
     }
 
-    public User updateEntityFromDTO(User user, UserRequestDTO userDTO) {
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setActive(userDTO.isActive());
-        return user;
-    }
-
-
 }
 

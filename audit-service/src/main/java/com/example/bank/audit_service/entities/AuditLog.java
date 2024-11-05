@@ -1,4 +1,3 @@
-
 package com.example.bank.audit_service.entities;
 
 import jakarta.persistence.Entity;
@@ -18,7 +17,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuditLog {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -57,16 +57,4 @@ public class Card {
         this.balance = balance;
     }
 
-    public Card(Object o, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, double limiteInicial) {
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

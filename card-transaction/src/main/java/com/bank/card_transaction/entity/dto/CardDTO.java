@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,16 +15,13 @@ public class CardDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String cardNumber;
     private String cardHolderName;
-    private String expirationDate; // No formato MM/YY
+    private String expirationDate;
     private String cvv;
-    private double balance; // Saldo do cartão
+    private double balance;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    // Getters e Setters
 
     public Long getId() {
         return id;

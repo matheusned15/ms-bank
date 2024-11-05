@@ -4,12 +4,12 @@ import com.bank.card_transaction.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    List<Transaction> findByUserId(Long userId);
-    List<Transaction> findByPayerCard_IdOrRecipientCard_Id(Long payerCardId, Long recipientCardId);
+    Optional<Transaction> findById(Long id);
 
-    List<Transaction> findByPayerCard_UserIdOrRecipientCard_UserId(Long payerUserId, Long recipientUserId);
+    List<Transaction> getAllTransactionsByUserId(Long userId);
 }
 
 

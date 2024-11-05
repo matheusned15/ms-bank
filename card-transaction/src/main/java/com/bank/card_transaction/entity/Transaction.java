@@ -19,44 +19,28 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
-    private Card payerCard;
+    @JoinColumn(name = "payer_card_id", nullable = false)
+    private Card payerCardId;
 
     @ManyToOne
-    private Card recipientCard;
+    @JoinColumn(name = "recipient_card_id", nullable = false)
+    private Card recipientCardId;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "recipient_id", nullable = false)
+    private Long recipientId;
 
-    @Column(nullable = false)
+    @Column(name = "transaction_amount", nullable = false)
     private double transactionAmount;
 
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private TransactionType transactionType;
-
-
-    @Column(nullable = false)
+    @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
-
-    @Column(nullable = false)
-    private String merchantName;
-
-
-    @Column(nullable = false)
-    private String status;
-
-
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-
-    @Column(name = "payerNewBalance", nullable = false)
-    private BigDecimal payerNewBalance;
-
-
-    @Column(name = "recipientNewBalance", nullable = false)
-    private BigDecimal recipientNewBalance;
+    @Column(name = "status", nullable = false)
+    private String status;
 }

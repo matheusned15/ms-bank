@@ -12,12 +12,6 @@ public interface UserManagementClient {
     @GetMapping("{id}")
     UserResponseDTO getUserById(@PathVariable("id") Long id);
 
-    @PostMapping("/api/users/validate")
-    ValidationResponseDTO validateUser(@RequestBody UserValidationRequestDTO requestDTO);
-
-    @PutMapping("/api/users/{userId}/add-card")
-    void addCardToUser(@PathVariable("userId") Long userId, @RequestBody CardRequestDTO card);
-
     @PutMapping("/{id}")
     void updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO);
 }

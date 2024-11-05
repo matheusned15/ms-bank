@@ -17,7 +17,7 @@ public class UserRequestDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
-    private CardDTO card; // Campo para associar o cartão ao usuário
+    private CardDTO card;
 
 }
 

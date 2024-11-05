@@ -12,7 +12,6 @@ public class CardDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Construtores
     public CardDTO() {}
 
     public CardDTO(Long id, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, double balance, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -34,7 +33,7 @@ public class CardDTO {
         this.balance = balance;
     }
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }

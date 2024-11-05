@@ -82,7 +82,6 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
 
-            // Atualização dos dados do usuário se forem fornecidos
             if (userDTO.getUsername() != null && !userDTO.getUsername().isEmpty()) {
                 userToUpdate.setUsername(userDTO.getUsername());
             }
@@ -94,30 +93,25 @@ public class UserService {
                 userToUpdate.setPassword(hashedPassword);
             }
 
-            // Verifica se há um cartão no UserRequestDTO
             CardDTO cardDTO = userDTO.getCard();
             if (cardDTO != null) {
                 if (userToUpdate.getCard() == null) {
                     Card newCard = convertCardDTOToEntity(cardDTO);
                     userToUpdate.setCard(newCard);
                 } else {
-                    throw new IllegalStateException("Usuário já possui um cartão. Não é possível adicionar outro.");
+                    throw new IllegalStateException("User already has a card. It is not possible to add another one.");
                 }
             }
 
-            // Atualizar a data de modificação
             userToUpdate.setUpdated_at(LocalDateTime.now());
 
-            // Processar o usuário (caso haja algum processamento adicional necessário)
             userToUpdate = userProcessor.process(userToUpdate);
 
-            // Salvar as atualizações no banco de dados
             User updatedUser = userRepository.save(userToUpdate);
 
-            // Converter e retornar o User atualizado como DTO
             return userConverter.convertToDTO(updatedUser);
         } else {
-            throw new UserNotFoundException("Usuário com ID " + id + " não encontrado.");
+            throw new UserNotFoundException("User with ID " + id + " not found.");
         }
     }
 
@@ -134,9 +128,6 @@ public class UserService {
         return card;
     }
 
-
-
-
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -144,16 +135,5 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public Card convertToEntity(CardRequestDTO dto) {
-        return new Card(
-                dto.getId(),
-                dto.getCardNumber(),
-                dto.getCardHolderName(),
-                dto.getCvv(),
-                dto.getExpirationDate(),
-                dto.getAge(),
-                dto.getLimit()
-        );
-    }
 }
 

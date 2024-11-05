@@ -10,7 +10,6 @@ public class UserProcessor {
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
     public User process(User user) {
 
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {

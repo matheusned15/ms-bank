@@ -12,7 +12,7 @@ public class UserFilters {
 
     public List<User> filterActiveUsers(List<User> users) {
         return users.stream()
-                .filter(User::isActive) // Supondo que exista um método isActive() na entidade User
+                .filter(User::isActive)
                 .collect(Collectors.toList());
     }
 

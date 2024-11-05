@@ -16,13 +16,11 @@ public class CardValidationService {
 
     private final AuditClient auditClient;
 
-    // Injeção de dependência pelo construtor
     @Autowired
     public CardValidationService(AuditClient auditClient) {
         this.auditClient = auditClient;
     }
 
-    // Verifica se o número do cartão é válido usando o Algoritmo de Luhn
     public static boolean isLuhnValid(String cardNumber) {
         int sum = 0;
         boolean alternate = false;
@@ -40,33 +38,28 @@ public class CardValidationService {
         return (sum % 10 == 0);
     }
 
-    // Verifica se o número do cartão tem o formato esperado
     public static boolean isValidCardNumberFormat(String cardNumber) {
         return Pattern.matches("^[456]\\d{15}$", cardNumber);
     }
 
-    // Verifica se a data de expiração é válida e não está no passado
     public static boolean isExpirationDateValid(String expirationDate) {
         YearMonth currentYearMonth = YearMonth.now();
         try {
             YearMonth cardYearMonth = YearMonth.parse(expirationDate, java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
             return cardYearMonth.isAfter(currentYearMonth);
         } catch (Exception e) {
-            return false; // Formato de data inválido
+            return false;
         }
     }
 
-    // Verifica se o CVV é válido (3 ou 4 dígitos)
     public static boolean isCvvValid(String cvv) {
         return Pattern.matches("^\\d{3,4}$", cvv);
     }
 
-    // Verifica se o nome do titular do cartão é válido (não nulo ou vazio)
     public static boolean isCardHolderNameValid(String cardHolderName) {
         return cardHolderName != null && !cardHolderName.trim().isEmpty();
     }
 
-    // Valida todos os aspectos do cartão, incluindo o nome do titular
     public boolean validateCard(CardValidationRequestDTO cardValidationRequest) {
         return isCardHolderNameValid(cardValidationRequest.getCardHolderName()) &&
                 isLuhnValid(cardValidationRequest.getCardNumber()) &&
@@ -76,32 +69,27 @@ public class CardValidationService {
                 validateCardAndProcessTransaction(cardValidationRequest);
     }
 
-    // O método agora utiliza os dados do cartão que já estão no requestDTO
     public boolean validateCardAndProcessTransaction(CardValidationRequestDTO requestDTO) {
         CardValidationResponseDTO cardResponse = new CardValidationResponseDTO();
         cardResponse.setCvv(requestDTO.getCvv());
         cardResponse.setExpirationDate(requestDTO.getExpirationDate());
         cardResponse.setAmount(requestDTO.getAmount());
 
-        // Validar os detalhes do cartão (número, CVV, data de expiração)
         if (!validateCardDetails(requestDTO, cardResponse)) {
-            return false; // Dados do cartão inválidos
+            return false;
         }
 
-        // Validar saldo
         if (!validateBalance(cardResponse.getAmount(), requestDTO.getAmount())) {
-            return false; // Saldo insuficiente
+            return false;
         }
 
-        // Simular atualização de saldo após a transação
-        double novoSaldo = cardResponse.getAmount() - requestDTO.getAmount();
-        // Aqui você poderia adicionar a lógica de persistir o novo saldo, se necessário
+       // double novoSaldo = cardResponse.getAmount() - requestDTO.getAmount();
 
-        // Enviar evento de auditoria
+
         AuditDTO auditDTO = new AuditDTO("CardValidation", "Card Validated: " + requestDTO.getCardNumber(), LocalDateTime.now());
         auditClient.sendAuditEvent(auditDTO);
 
-        return true; // Transação válida
+        return true;
     }
 
     private boolean validateCardDetails(CardValidationRequestDTO requestDTO, CardValidationResponseDTO cardResponse) {
@@ -110,6 +98,6 @@ public class CardValidationService {
     }
 
     private boolean validateBalance(double currentBalance, double transactionAmount) {
-        return currentBalance >= transactionAmount; // Saldo suficiente
+        return currentBalance >= transactionAmount;
     }
 }

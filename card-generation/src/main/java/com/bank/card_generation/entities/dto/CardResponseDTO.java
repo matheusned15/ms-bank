@@ -1,6 +1,6 @@
 package com.bank.card_generation.entities.dto;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 
 public class CardResponseDTO {

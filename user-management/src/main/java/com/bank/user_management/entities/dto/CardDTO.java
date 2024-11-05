@@ -1,6 +1,6 @@
 package com.bank.user_management.entities.dto;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 
 public class CardDTO {
@@ -13,7 +13,6 @@ public class CardDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Construtores
     public CardDTO() {}
 
     public CardDTO(Long id, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, double balance, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -27,7 +26,6 @@ public class CardDTO {
         this.updatedAt = updatedAt;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

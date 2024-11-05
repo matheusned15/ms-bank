@@ -1,5 +1,6 @@
 package com.bank.user_management.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class Card {
     private double balance;
 
     @OneToOne(mappedBy = "card")
+    @JsonBackReference
     private User user;
 
     public Card(Long id, String cardNumber, String cardHolderName, String cvv, LocalDateTime expirationDate, Integer age, double balance) {
