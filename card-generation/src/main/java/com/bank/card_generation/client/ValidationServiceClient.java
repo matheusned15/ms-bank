@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "validation-service", url = "localhost:8003", path = "/api/card-validation")
+@FeignClient(name = "validation-service", url = "card-validation.url", path = "/api/card-validation")
 public interface ValidationServiceClient {
 
     @GetMapping("/validateCard")

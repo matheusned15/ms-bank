@@ -50,12 +50,18 @@ public class CardTransactionController {
         }
     }
 
-    @GetMapping("/{cardId}")
-    public ResponseEntity<List<TransactionResponseDTO>> getTransactionsByUserId(@PathVariable Long cardId) {
+    @GetMapping("card/{cardId}")
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactionsByUserId(@PathVariable Long cardId) {
         List<TransactionResponseDTO> transactions = cardTransactionService.getAllTransactionsByUserId(cardId);
         if (transactions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/getTransactionsByUserId/{userId}")
+    public ResponseEntity<TransactionResponseDTO> getTransactionsByUserId(@PathVariable Long userId) {
+        TransactionResponseDTO transactions = cardTransactionService.getTransactionById(userId);
         return ResponseEntity.ok(transactions);
     }
 }

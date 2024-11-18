@@ -8,6 +8,33 @@ public class TransactionResponseDTO {
     private String message;
     private double payerNewBalance;
     private double recipientNewBalance;
+    private Long payerId;
+    private Long recipientId;
+    private double amount;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public Long getPayerId() {
+        return payerId;
+    }
+
+    public void setPayerId(Long payerId) {
+        this.payerId = payerId;
+    }
+
+    public Long getRecipientId() {
+        return recipientId;
+    }
+
+    public void setRecipientId(Long recipientId) {
+        this.recipientId = recipientId;
+    }
 
     public Long getTransactionId() {
         return transactionId;

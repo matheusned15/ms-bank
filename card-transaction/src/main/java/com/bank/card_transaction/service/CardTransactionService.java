@@ -115,6 +115,10 @@ public class CardTransactionService {
         response.setMessage("Transaction completed successfully");
         response.setPayerNewBalance(payerNewBalance);
         response.setRecipientNewBalance(recipientNewBalance);
+        response.setPayerId(transaction.getUserId());
+        response.setRecipientId(transaction.getRecipientId());
+        response.setAmount(transaction.getTransactionAmount());
+
         return response;
     }
 
@@ -145,6 +149,25 @@ public class CardTransactionService {
         return transactions.stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public TransactionResponseDTO getTransactionById(Long id){
+        Transaction transaction = transactionRepository.getByTransaction(id);
+
+        CardDTO payerId = cardGenerationClient.getCardById(transaction.getPayerCardId().getId());
+        CardDTO recipientId = cardGenerationClient.getCardById(transaction.getRecipientCardId().getId());
+
+        TransactionResponseDTO dto = new TransactionResponseDTO();
+        dto.setPayerId(transaction.getUserId());
+        dto.setAmount(transaction.getTransactionAmount());
+        dto.setRecipientId(transaction.getRecipientId());
+        dto.setTransactionId(transaction.getId());
+        dto.setMessage(transaction.getDescription());
+        dto.setStatus(transaction.getStatus());
+        dto.setPayerNewBalance(payerId.getBalance());
+        dto.setRecipientNewBalance(recipientId.getBalance());
+
+        return dto;
     }
 
 }

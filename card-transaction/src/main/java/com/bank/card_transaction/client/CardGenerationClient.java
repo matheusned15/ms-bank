@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "card-generation", url = "localhost:8087", path = "/api/cards")
+@FeignClient(name = "card-generation", url = "user-management.url", path = "/api/cards")
 public interface CardGenerationClient {
 
     @GetMapping("/{cardId}")

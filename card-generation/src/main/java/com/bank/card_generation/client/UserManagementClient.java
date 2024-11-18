@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 @Component
-@FeignClient(name = "user-management-service", url = "localhost:8081", path = "/api/users")
+@FeignClient(name = "user-management-service", url = "user-management.url", path = "/api/users")
 public interface UserManagementClient {
 
     @GetMapping("{id}")
