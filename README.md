@@ -21,7 +21,6 @@ Este projeto é uma solução completa para um sistema bancário simulado, integ
 - Card Validation: Serviço que valida a autenticidade e o saldo do cartão.
 - Card Transaction: Serviço que realiza transações entre cartões e atualiza saldos.
 - Audit Service: Serviço que audita as operações (transações e geração de cartões) realizadas no sistema.
-- Notification Service: Serviço que envia notificações via email ou outro canal após operações realizadas.
 
 
 <h2 id="tech">💻 Tecnologia</h2>
@@ -83,19 +82,8 @@ Here you list all prerequisites necessary for running your project. For example:
 - Card-validation
 - Card-transaction
 - Audit-service
-- Notification-service
 
 <h3>Testar as APIs: Use uma ferramenta como Postman ou cURL para fazer requisições HTTP para os serviços. Cada serviço roda na porta configurada (geralmente 8080, 8081, etc.)</h3>
-
-<h3>Config .env variables</h2>
-
-Use the `.env.example` as reference to create your configuration file `.env` with your AWS Credentials
-
-```yaml
-NODE_AWS_REGION=us-east-1
-NODE_AWS_KEY_ID={YOUR_AWS_KEY_ID}
-NODE_AWS_SECRET={YOUR_AWS_SECRET}
-```
 
 Exemplo de requisição:
 Para criar um novo usuário no serviço de gerenciamento de usuários (User Management):
@@ -121,17 +109,89 @@ POST http://localhost:8081/api/cards
 
 ## Script para criação das tabelas
 ```sql
-INSERT INTO users (username, email, password_hash) VALUES 
-('johndoe', 'johndoe@example.com', 'senhaSegura123'),
-('janedoe', 'janedoe@example.com', 'outraSenhaSegura321');
+-- Criar a tabela users
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    active BOOLEAN NOT NULL DEFAULT true,
+    card_id BIGINT -- Para referenciar o cartão do usuário
+);
 
-INSERT INTO cards (card_number, card_holder_name, cvv, expiration_date, balance) VALUES 
-('1234567812345678', 'John Doe', '123', '2026-12-31', 1000.0),
-('8765432187654321', 'Jane Doe', '456', '2026-12-31', 2000.0);
+-- Criar a tabela cards
+CREATE TABLE cards (
+    id BIGSERIAL PRIMARY KEY,
+    card_number VARCHAR(16) NOT NULL,
+    cvv VARCHAR(3) NOT NULL,
+    expiration_date DATE NOT NULL,
+    balance DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_user_card FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
-INSERT INTO transactions (transaction_id, sender_card, receiver_card, amount, timestamp) VALUES 
-('tx123', '1234567812345678', '8765432187654321', 150.0, '2024-01-01 12:00:00'),
-('tx124', '1234567812345678', '8765432187654321', 200.0, '2024-01-02 14:30:00');
+-- Garantir que o usuário tenha apenas um cartão
+ALTER TABLE users
+ADD CONSTRAINT fk_user_card FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE SET NULL;
+
+-- Garantir unicidade do cartão para o usuário
+ALTER TABLE cards
+ADD CONSTRAINT unique_user_card UNIQUE (user_id);
+
+-- Criar a tabela notifications
+CREATE TABLE notifications (
+    id BIGSERIAL PRIMARY KEY,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_notification_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Criar a tabela audit_logs
+CREATE TABLE audit_logs (
+    id BIGSERIAL PRIMARY KEY,
+    action VARCHAR(255) NOT NULL,
+    performed_by BIGINT NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    CONSTRAINT fk_audit_user FOREIGN KEY (performed_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Criar a tabela de transações de cartões
+CREATE TABLE card_transactions (
+    id BIGSERIAL PRIMARY KEY,
+    amount DECIMAL(10, 2) NOT NULL,
+    transaction_date TIMESTAMP NOT NULL,
+    card_id BIGINT NOT NULL,
+    CONSTRAINT fk_transaction_card FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE
+);
+
+-- Inserir usuário exemplo
+INSERT INTO users (username, email, password, created_at, active)
+VALUES ('john_doe', 'john.doe@example.com', 'hashed_password', NOW(), true);
+
+-- Inserir cartão exemplo para o usuário
+INSERT INTO cards (card_number, cvv, expiration_date, balance, created_at, user_id)
+VALUES ('1234567812345678', '123', '2026-12-31', 500.00, NOW(), 1);
+
+-- Atualizar o usuário para associar o cartão recém-criado
+UPDATE users SET card_id = (SELECT id FROM cards WHERE user_id = 1) WHERE id = 1;
+
+-- Inserir notificação exemplo
+INSERT INTO notifications (message, created_at, user_id)
+VALUES ('Sua conta foi atualizada', NOW(), 1);
+
+-- Inserir transação exemplo
+INSERT INTO card_transactions (amount, transaction_date, card_id)
+VALUES (100.00, NOW(), (SELECT id FROM cards WHERE user_id = 1));
+
+-- Inserir log de auditoria exemplo
+INSERT INTO audit_logs (action, performed_by, timestamp)
+VALUES ('User account updated', 1, NOW());
+
 ```
 
 <h2 id="contribute">📫 Contribuição</h2>
